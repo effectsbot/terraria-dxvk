@@ -13,7 +13,7 @@ env:
   VULKAN_VERSION: "1.4.335"
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -46,15 +46,15 @@ jobs:
           libxi-dev \
           libxss-dev \
           libxtst-dev \
-          libxkbcommon-dev \ 
+          libxkbcommon-dev \
           libdrm-dev \ 
           libgbm-dev \ 
           libgl1-mesa-dev \ 
           libgles2-mesa-dev \
           libegl1-mesa-dev \ 
-          libdbus-1-dev \ 
-          libibus-1.0-dev \ 
-          libudev-dev \ 
+          libdbus-1-dev \
+          libibus-1.0-dev \
+          libudev-dev \
           libthai-dev \
           libpipewire-0.3-dev \
           libwayland-dev \
