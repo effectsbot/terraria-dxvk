@@ -71,8 +71,7 @@ jobs:
           flex \
           bison \
           libjson-perl \
-          ccache \
-          rsync
+          ccache
 
     - name: 'Fetch sources'
       run: |
@@ -271,10 +270,10 @@ jobs:
         cp -L dxvk/build/src/dxgi/libdxvk_dxgi.so ${{ env.INSTALL }}/lib64
         cp -L SDL/build/libSDL3.so.0 ${{ env.INSTALL }}/lib64
         cp -L sdl2-compat/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
-        cp SPIRV-Tools/build/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/libvkd3d.so.1 ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/libvkd3d-utils.so.1 ${{ env.INSTALL }}/lib64
+        cp SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
+        cp -L vkd3d/.libs/libvkd3d.so.1 ${{ env.INSTALL }}/lib64
+        cp -L vkd3d/.libs/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
+        cp -L vkd3d/.libs/libvkd3d-utils.so.1 ${{ env.INSTALL }}/lib64
         cp -L FNA/lib/FAudio/build/libFAudio.so.0 ${{ env.INSTALL }}/lib64
         cp -L FNA/lib/FAudio/build/libFNA3D.so.0 ${{ env.INSTALL }}/lib64
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
