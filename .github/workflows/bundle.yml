@@ -232,7 +232,7 @@ jobs:
       run: |
         cmake \
         -B build \
-        -D BUILD_SDL3=OFF
+        -D BUILD_SDL3=ON
 
     - name: 'Build FAudio'
       working-directory: FNA/lib/FAudio
@@ -243,7 +243,7 @@ jobs:
       run: |
         cmake \
         -B build \
-        -D BUILD_SDL3=OFF \
+        -D BUILD_SDL3=ON \
         -D BUILD_DXVK_NATIVE=ON
 
     - name: 'Build FNA3D'
