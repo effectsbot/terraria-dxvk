@@ -275,7 +275,7 @@ jobs:
         cp -L vkd3d/.libs/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d-utils.so.1 ${{ env.INSTALL }}/lib64
         cp -L FNA/lib/FAudio/build/libFAudio.so.0 ${{ env.INSTALL }}/lib64
-        cp -L FNA/lib/FAudio/build/libFNA3D.so.0 ${{ env.INSTALL }}/lib64
+        cp -L FNA/lib/FNA3D/build/libFNA3D.so.0 ${{ env.INSTALL }}/lib64
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
     - name: Make artifacts
