@@ -267,15 +267,16 @@ jobs:
         mkdir -p ${{ env.INSTALL }}/lib64
         cp FNA/bin/Debug/FNA.dll ${{ env.INSTALL }}
         cp FNA/bin/Debug/FNA.dll.config ${{ env.INSTALL }}
-        cp dxvk/build/libdxvk_d3d11.so* ${{ env.INSTALL }}/lib64
+        cp dxvk/build/src/d3d11/libdxvk_d3d11.so* ${{ env.INSTALL }}/lib64
+        cp dxvk/build/src/dxgi/libdxvk_dxgi.so* ${{ env.INSTALL }}/lib64
         cp SDL/build/libSDL3.so* ${{ env.INSTALL }}/lib64
         cp sdl2-compat/build/libSDL2-2.0.so* ${{ env.INSTALL }}/lib64
         cp SPIRV-Tools/build/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
         cp vkd3d/libvkd3d.so* ${{ env.INSTALL }}/lib64
         cp vkd3d/libvkd3d-shader.so* ${{ env.INSTALL }}/lib64
         cp vkd3d/libvkd3d-utils.so* ${{ env.INSTALL }}/lib64
-        cp FNA/lib/FAudio/libFAudio.so* ${{ env.INSTALL }}/lib64
-        cp FNA/lib/FAudio/libFNA3D.so* ${{ env.INSTALL }}/lib64
+        cp FNA/lib/FAudio/build/libFAudio.so* ${{ env.INSTALL }}/lib64
+        cp FNA/lib/FAudio/build/libFNA3D.so* ${{ env.INSTALL }}/lib64
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
     - name: Make artifacts
