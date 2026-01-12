@@ -20,7 +20,8 @@ jobs:
         echo "NAME=terraria-dxvk-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
-        sudo apt update -y
+        sudo apt update
+        sudo apt -y upgrade
         sudo apt install \
           build-essential \
           git \
