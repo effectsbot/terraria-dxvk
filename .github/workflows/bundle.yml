@@ -105,7 +105,7 @@ jobs:
       working-directory: Vulkan-Headers
       run: |
         cmake \
-        -B build \ 
+        -B build \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
@@ -121,11 +121,11 @@ jobs:
       working-directory: SPIRV-Headers
       run: |
         cmake \
-        -B build \ 
+        -B build \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-        -D CMAKE_SKIP_INSTALL_RPATH=ON    
+        -D CMAKE_SKIP_INSTALL_RPATH=ON
 
     - name: 'Build & install SPIRV-Headers'
       working-directory: SPIRV-Headers
@@ -137,11 +137,11 @@ jobs:
       working-directory: Vulkan-Loader
       run: |
         cmake \
-        -B build \ 
+        -B build \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-        -D CMAKE_SKIP_INSTALL_RPATH=ON    
+        -D CMAKE_SKIP_INSTALL_RPATH=ON
 
     - name: 'Build & install Vulkan-Loader'
       working-directory: Vulkan-Loader
@@ -153,7 +153,7 @@ jobs:
       working-directory: SPIRV-Tools
       run: |
         cmake \
-        -B build \ 
+        -B build \
         -D BUILD_SHARED_LIBS=ON \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
