@@ -94,7 +94,6 @@ jobs:
     - name: 'Apply patches'
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
-        mkdir -p ${{ env.INSTALL }}
         
         patch -d FNA -sNp1 < 0001-Switch-default-FNAPlatform-back-to-SDL2.patch
         patch -d FNA -sNp1 < 0001-Add-SDL2_image.cs-to-MakeFile.patch
@@ -263,7 +262,7 @@ jobs:
 
     - name: 'Assemble bundle'
       run: |
-        mkdir ${{ env.INSTALL }}/lib64
+        mkdir -p ${{ env.INSTALL }}/lib64
         cp FNA/bin/debug/FNA.dll ${{ env.INSTALL }}
         cp FNA/bin/debug/FNA.dll.config ${{ env.INSTALL }}
         rsync --no-links \
