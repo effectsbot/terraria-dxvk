@@ -47,7 +47,7 @@ jobs:
           libxss-dev \
           libxtst-dev \
           libxkbcommon-dev \
-          libdrm-dev \ 
+          libdrm-dev \
           libgbm-dev \
           libgl1-mesa-dev \
           libgles2-mesa-dev \
