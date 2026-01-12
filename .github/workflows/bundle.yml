@@ -256,23 +256,22 @@ jobs:
 
     - name: 'Build FNA'
       working-directory: FNA
-      run: make -j$(($(nproc) + 1))
+      run: make release -j$(($(nproc) + 1))
 
     - name: 'Assemble bundle'
       run: |
         mkdir -p ${{ env.INSTALL }}/lib64
-        cp FNA/bin/Debug/FNA.dll ${{ env.INSTALL }}
-        cp FNA/bin/Debug/FNA.dll.config ${{ env.INSTALL }}
-        cp -L dxvk/build/src/d3d11/libdxvk_d3d11.so.0 ${{ env.INSTALL }}/lib64
-        cp -L dxvk/build/src/dxgi/libdxvk_dxgi.so.0 ${{ env.INSTALL }}/lib64
-        cp -L SDL/build/libSDL3.so.0 ${{ env.INSTALL }}/lib64
-        cp -L sdl2-compat/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
+        cp FNA/bin/Release/* ${{ env.INSTALL }}
+        cp -r dxvk/build/src/d3d11/libdxvk_d3d11.so.0* ${{ env.INSTALL }}/lib64
+        cp -r dxvk/build/src/dxgi/libdxvk_dxgi.so.0* ${{ env.INSTALL }}/lib64
+        cp SDL/build/libSDL3.so.0* ${{ env.INSTALL }}/lib64
+        cp sdl2-compat/build/libSDL2-2.0.so.0* ${{ env.INSTALL }}/lib64
         cp SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/.libs/libvkd3d.so.1 ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/.libs/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/.libs/libvkd3d-utils.so.1 ${{ env.INSTALL }}/lib64
-        cp -L FNA/lib/FAudio/build/libFAudio.so.0 ${{ env.INSTALL }}/lib64
-        cp -L FNA/lib/FNA3D/build/libFNA3D.so.0 ${{ env.INSTALL }}/lib64
+        cp vkd3d/.libs/libvkd3d.so.1* ${{ env.INSTALL }}/lib64
+        cp vkd3d/.libs/libvkd3d-shader.so.1* ${{ env.INSTALL }}/lib64
+        cp vkd3d/.libs/libvkd3d-utils.so.1* ${{ env.INSTALL }}/lib64
+        cp FNA/lib/FAudio/build/libFAudio.so.0* ${{ env.INSTALL }}/lib64
+        cp FNA/lib/FNA3D/build/libFNA3D.so.0* ${{ env.INSTALL }}/lib64
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
     - name: Make artifacts
