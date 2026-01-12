@@ -220,7 +220,7 @@ jobs:
         -Denable_d3d9=false \
         -Denable_d3d10=false \
         -Dnative_glfw=disabled \
-        -Dnative_sdl3=disabled \
+        --buildtype release \
         build
 
     - name: 'Build & install dxvk'
