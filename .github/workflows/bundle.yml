@@ -95,7 +95,7 @@ jobs:
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
         
-        patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
+        patch -d FNA -sNp1 < patches/0001-Add-SDL2_image.cs-to-MakeFile.patch
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
