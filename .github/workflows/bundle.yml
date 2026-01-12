@@ -7,7 +7,8 @@ env:
   BUNDLE_VERSION: "0.3.0"
   DXVK_VERSION: "2.7.1"
   FNA_VERSION: "26.01"
-  SDL_VERSION: "2.32.10"
+  SDL_VERSION: "3.4.0"
+  SDL2-COMPAT_VERSION: "2.32.62"
   VKD3D_VERSION: "1.18"
   VULKAN_VERSION: "1.4.335"
 jobs:
@@ -64,6 +65,9 @@ jobs:
           glslang-tools \
           mono-mcs \
           wine64-tools \
+          x11proto-dev \
+          libxcb-keysyms1-dev \
+          graphviz \
           ccache
 
     - name: 'Fetch sources'
@@ -74,6 +78,8 @@ jobs:
           --branch ${{ env.FNA_VERSION }}
         git clone https://github.com/libsdl-org/SDL.git --depth 1 \
           --branch release-${{ env.SDL_VERSION }}
+        git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
+          --branch release-${{ env.SDL2-COMPAT_VERSION }}
         git clone https://github.com/KhronosGroup/SPIRV-Headers.git --depth 1 \
           --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
         git clone https://github.com/KhronosGroup/SPIRV-Tools.git --depth 1 \
@@ -169,7 +175,7 @@ jobs:
         ./autogen.sh
         ./configure \
         --prefix=/usr \
-        --disable-tests \
+        --enable-tests \
         --disable-doxygen-doc \
         --with-spirv-tools
 
@@ -192,6 +198,20 @@ jobs:
       run: |
         cmake --build build -j$(($(nproc) + 1))
         sudo cmake --install build
+
+    - name: 'Configure sdl2-compat'
+      working-directory: sdl2-compat
+      run: |
+        cmake \
+        -B build \
+        -D CMAKE_BUILD_TYPE=Release \
+        -D CMAKE_INSTALL_PREFIX=/usr
+
+    - name: 'Build & install sdl2-compat'
+      working-directory: sdl2-compat
+      run: |
+        cmake --build build -j$(($(nproc) + 1))
+        cmake --install build
 
     - name: 'Configure dxvk'
       working-directory: dxvk
