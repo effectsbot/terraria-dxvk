@@ -172,6 +172,7 @@ jobs:
     - name: 'Configure vkd3d'
       working-directory: vkd3d
       run: |
+        ./autogen.sh
         ./configure \
         --prefix=/usr \
         --disable-doxygen-pdf \
