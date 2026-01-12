@@ -266,8 +266,8 @@ jobs:
         mkdir -p ${{ env.INSTALL }}/lib64
         cp FNA/bin/Debug/FNA.dll ${{ env.INSTALL }}
         cp FNA/bin/Debug/FNA.dll.config ${{ env.INSTALL }}
-        cp -L dxvk/build/src/d3d11/libdxvk_d3d11.so ${{ env.INSTALL }}/lib64
-        cp -L dxvk/build/src/dxgi/libdxvk_dxgi.so ${{ env.INSTALL }}/lib64
+        cp -L dxvk/build/src/d3d11/libdxvk_d3d11.so.0 ${{ env.INSTALL }}/lib64
+        cp -L dxvk/build/src/dxgi/libdxvk_dxgi.so.0 ${{ env.INSTALL }}/lib64
         cp -L SDL/build/libSDL3.so.0 ${{ env.INSTALL }}/lib64
         cp -L sdl2-compat/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
         cp SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
