@@ -7,8 +7,7 @@ env:
   BUNDLE_VERSION: "0.3.0"
   DXVK_VERSION: "2.7.1"
   FNA_VERSION: "26.01"
-  SDL_VERSION: "3.4.0"
-  SDL2-COMPAT_VERSION: "2.32.62"
+  SDL_VERSION: "2.32.10"
   VKD3D_VERSION: "1.18"
   VULKAN_VERSION: "1.4.335"
 jobs:
@@ -64,9 +63,6 @@ jobs:
           mingw-w64 \
           glslang-tools \
           mono-mcs \
-          libxcb-util0-dev \
-          libxcb-icccm4-dev \
-          libxcb-keysyms1-dev \
           wine64-tools \
           ccache
 
@@ -78,8 +74,6 @@ jobs:
           --branch ${{ env.FNA_VERSION }}
         git clone https://github.com/libsdl-org/SDL.git --depth 1 \
           --branch release-${{ env.SDL_VERSION }}
-        git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
-          --branch release-${{ env.SDL2-COMPAT_VERSION }}
         git clone https://github.com/KhronosGroup/SPIRV-Headers.git --depth 1 \
           --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
         git clone https://github.com/KhronosGroup/SPIRV-Tools.git --depth 1 \
@@ -95,6 +89,7 @@ jobs:
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
         
+        patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
         patch -d FNA -sNp1 < patches/0001-Add-SDL2_image.cs-to-MakeFile.patch
 
     - name: 'Configure ccache'
@@ -187,27 +182,13 @@ jobs:
       run: |
         cmake \
         -B build \
-        -D CMAKE_BUILD_TYPE=None \
+        -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D SDL_STATIC=OFF \
         -D SDL_RPATH=OFF
 
     - name: 'Build & install SDL'
       working-directory: SDL
-      run: |
-        cmake --build build -j$(($(nproc) + 1))
-        sudo cmake --install build
-
-    - name: 'Configure sdl2-compat'
-      working-directory: sdl2-compat
-      run: |
-        cmake \
-        -B build \
-        -D CMAKE_BUILD_TYPE=None \
-        -D CMAKE_INSTALL_PREFIX=/usr
-
-    - name: 'Build & install sdl2-compat'
-      working-directory: sdl2-compat
       run: |
         cmake --build build -j$(($(nproc) + 1))
         sudo cmake --install build
@@ -220,6 +201,7 @@ jobs:
         -Denable_d3d9=false \
         -Denable_d3d10=false \
         -Dnative_glfw=disabled \
+        -Dnative_sdl3=disabled \
         --buildtype release \
         build
 
@@ -232,6 +214,7 @@ jobs:
       run: |
         cmake \
         -B build \
+        -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_SDL3=OFF
 
     - name: 'Build FAudio'
@@ -243,6 +226,7 @@ jobs:
       run: |
         cmake \
         -B build \
+        -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_SDL3=OFF
 
     - name: 'Build FNA3D'
@@ -257,14 +241,13 @@ jobs:
       working-directory: FNA
       run: make release -j$(($(nproc) + 1))
 
-    - name: 'Assemble bundle'
+    - name: 'Create bundle'
       run: |
         mkdir -p ${{ env.INSTALL }}/lib64
         cp FNA/bin/Release/* ${{ env.INSTALL }}
         cp -L dxvk/build/src/d3d11/libdxvk_d3d11.so.0 ${{ env.INSTALL }}/lib64
         cp -L dxvk/build/src/dxgi/libdxvk_dxgi.so.0 ${{ env.INSTALL }}/lib64
-        cp -L SDL/build/libSDL3.so.0 ${{ env.INSTALL }}/lib64
-        cp -L sdl2-compat/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
+        cp -L SDL/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
         cp SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
@@ -273,12 +256,12 @@ jobs:
         cp -L FNA/lib/FNA3D/build/libFNA3D.so.0 ${{ env.INSTALL }}/lib64
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
-    - name: Make artifacts
+    - name: 'Make artifacts'
       run: |
         cd $(dirname ${{ env.INSTALL }})
         XZ_OPT=-9 tar -Jcf ${{ env.NAME }}.tar.xz $(basename ${{ env.INSTALL }})
 
-    - name: Upload artifacts
+    - name: 'Upload artifacts'
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.NAME }}
