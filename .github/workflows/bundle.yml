@@ -68,9 +68,6 @@ jobs:
           libxcb-icccm4-dev \
           libxcb-keysyms1-dev \
           wine64-tools \
-          flex \
-          bison \
-          libjson-perl \
           ccache
 
     - name: 'Fetch sources'
