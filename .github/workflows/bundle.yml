@@ -65,6 +65,7 @@ jobs:
           glslang-tools \
           mono-mcs \
           wine64-tools \
+          doxygen \
           ccache
 
     - name: 'Fetch sources'
