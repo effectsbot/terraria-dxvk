@@ -172,8 +172,8 @@ jobs:
         ./autogen.sh
         ./configure \
         --prefix=/usr \
-        --disable-tests
-        --disable-doxygen-doc
+        --disable-tests \
+        --disable-doxygen-doc \
         --with-spirv-tools
 
     - name: 'Build vkd3d'
