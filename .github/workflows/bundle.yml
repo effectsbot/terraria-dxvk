@@ -267,7 +267,6 @@ jobs:
         cp -L SDL/build/libSDL3.so.0 ${{ env.INSTALL }}/lib64
         cp -L sdl2-compat/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
         cp -L SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
-        cp -L Vulkan-Loader/build/source/libvulkan.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d-utils.so.1 ${{ env.INSTALL }}/lib64
