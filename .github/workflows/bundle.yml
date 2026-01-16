@@ -23,7 +23,7 @@ jobs:
         echo "NAME=terraria-dxvk-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
-        sudo apt update -y
+        sudo apt update
         sudo apt install \
           build-essential \
           git \
@@ -65,9 +65,6 @@ jobs:
           glslang-tools \
           mono-mcs \
           wine64-tools \
-          x11proto-dev \
-          libxcb-keysyms1-dev \
-          graphviz \
           ccache
 
     - name: 'Fetch sources'
@@ -94,7 +91,7 @@ jobs:
     - name: 'Apply patches'
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
-        
+
         patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
         patch -d FNA -sNp1 < patches/0001-Add-SDL2_image.cs-to-MakeFile.patch
 
@@ -175,8 +172,11 @@ jobs:
         ./autogen.sh
         ./configure \
         --prefix=/usr \
-        --enable-tests \
-        --disable-doxygen-doc \
+        --disable-doxygen-pdf
+        --enable-doxygen-doc
+        --enable-doxygen-dot
+        --enable-doxygen-html
+        --enable-tests
         --with-spirv-tools
 
     - name: 'Build vkd3d'
@@ -217,11 +217,11 @@ jobs:
       working-directory: dxvk
       run: |
         meson setup \
-        -Denable_d3d8=false \
-        -Denable_d3d9=false \
-        -Denable_d3d10=false \
-        -Dnative_glfw=disabled \
-        -Dnative_sdl3=disabled \
+        -D enable_d3d8=false \
+        -D enable_d3d9=false \
+        -D enable_d3d10=false \
+        -D native_glfw=disabled \
+        -D native_sdl3=disabled \
         --buildtype release \
         build
 
@@ -264,17 +264,19 @@ jobs:
     - name: 'Create bundle'
       run: |
         mkdir -p ${{ env.INSTALL }}/lib64
-        cp FNA/bin/Release/* ${{ env.INSTALL }}
+        cp -L FNA/bin/Release/* ${{ env.INSTALL }}
         cp -L dxvk/build/src/d3d11/libdxvk_d3d11.so.0 ${{ env.INSTALL }}/lib64
         cp -L dxvk/build/src/dxgi/libdxvk_dxgi.so.0 ${{ env.INSTALL }}/lib64
-        cp -L SDL/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
-        cp SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
+        cp -L SDL/build/libSDL3.so.0 ${{ env.INSTALL }}/lib64
+        cp -L sdl2-compat/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
+        cp -L SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
+        cp -L Vulkan-Loader/build/source/libvulkan.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
         cp -L vkd3d/.libs/libvkd3d-utils.so.1 ${{ env.INSTALL }}/lib64
         cp -L FNA/lib/FAudio/build/libFAudio.so.0 ${{ env.INSTALL }}/lib64
         cp -L FNA/lib/FNA3D/build/libFNA3D.so.0 ${{ env.INSTALL }}/lib64
-        cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
+        cp -L FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
     - name: 'Make artifacts'
       run: |
