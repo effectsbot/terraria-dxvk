@@ -208,7 +208,7 @@ jobs:
       working-directory: sdl2-compat
       run: |
         cmake --build build -j$(($(nproc) + 1))
-        cmake --install build
+        sudo cmake --install build
 
     - name: 'Configure dxvk'
       working-directory: dxvk
