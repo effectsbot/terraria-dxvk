@@ -16,6 +16,16 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    # Sourced from mono-project.com/download/stable
+    - name: 'Add Mono repository'
+      run: |
+        sudo apt update
+        sudo apt install ca-certificates gnupg
+        sudo gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        sudo chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-noble main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+        sudo apt update
+
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}+$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
@@ -59,7 +69,7 @@ jobs:
           meson \
           mingw-w64 \
           glslang-tools \
-          dotnet-sdk-8.0 \
+          mono-devel \
           libvkd3d-utils1 \
           libvkd3d-shader1 \
           ccache
@@ -179,12 +189,12 @@ jobs:
 
     - name: 'Build FNA'
       working-directory: FNA
-      run: dotnet build -p:Configuration=Release -p:Platform=x64 FNA.Core.csproj
+      run: msbuild /p:Configuration=Release /p:Platform=x64 FNA.sln
 
     - name: 'Create bundle'
       run: |
         mkdir -p ${{ env.INSTALL }}/lib64
-        cp FNA/bin/x64/Release/net8.0/* ${{ env.INSTALL }}
+        cp FNA/bin/Release/* ${{ env.INSTALL }}
         cat dxvk/build/src/d3d11/libdxvk_d3d11.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_d3d11.so.0
         cat dxvk/build/src/dxgi/libdxvk_dxgi.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_dxgi.so.0
         cat SDL/build/libSDL3.so.0 > ${{ env.INSTALL }}/lib64/libSDL3.so.0
