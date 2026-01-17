@@ -77,7 +77,7 @@ jobs:
 
     - name: 'Fetch sources'
       run: |
-        echo $GITHUB_WORKSPACE
+        echo "$GITHUB_WORKSPACE"
         echo "INSTALL=$GITHUB_WORKSPACE/${{ env.NAME }}" >> $GITHUB_ENV
 
         git clone https://github.com/mesonbuild/meson.git --depth 1 \
@@ -197,7 +197,7 @@ jobs:
 
     - name: 'Configure FNA'
       working-directory: FNA
-      run: cp $GITHUB_WORKSPACE/src/Terraria.Settings.props ./FNA.Settings.props
+      run: cp "$GITHUB_WORKSPACE"/src/Terraria.Settings.props ./FNA.Settings.props
 
     - name: 'Build FNA'
       working-directory: FNA
