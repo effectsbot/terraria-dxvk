@@ -101,7 +101,7 @@ jobs:
 
     - name: 'Fetch patches'
       run: |
-        wget -P $HOME/patches https://gitlab.archlinux.org/archlinux/packaging/packages/vulkan-headers/-/raw/main/0001-Remove-Werror.patch
+        wget -P patches https://gitlab.archlinux.org/archlinux/packaging/packages/vulkan-headers/-/raw/main/0001-Remove-Werror.patch
 
     - name: 'Apply patches'
       run: |
