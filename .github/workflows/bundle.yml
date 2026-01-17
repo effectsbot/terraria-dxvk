@@ -94,10 +94,6 @@ jobs:
       run: |
         patch -d FNA -sNp1 < src/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
-    - name: 'Setup meson'
-      working-directory: meson
-      run: sudo ln -sf meson.py /usr/bin/meson
-
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
 
