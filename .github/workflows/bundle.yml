@@ -73,6 +73,7 @@ jobs:
           mingw-w64 \
           glslang-tools \
           ninja-build \
+          python3-setuptools \
           mono-devel \
           autoconf \
           automake \
@@ -315,16 +316,16 @@ jobs:
       run: |
         mkdir -p ${{ env.BUNDLE }}/lib64
         cp FNA/bin/Release/* ${{ env.BUNDLE }}
-        cat /usr/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
-        cat /usr/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
-        cat /usr/lib/x86_64-linux-gnu/libSDL3.so.0 > ${{ env.BUNDLE }}/lib64/libSDL3.so.0
-        cat /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 > ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
-        cat /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
-        cat /usr/lib/x86_64-linux-gnu/libvkd3d-shader.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-shader.so.1
-        cat /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-utils.so.1
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-shared.so > ${{ env.BUNDLE }}/lib64/libSPIRV-Tools-shared.so
-        cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.BUNDLE }}/lib64/libFAudio.so.0
-        cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.BUNDLE }}/lib64/libFNA3D.so.0
+        cp /usr/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
+        cp /usr/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
+        cp /usr/lib/x86_64-linux-gnu/libSDL3.so.0 ${{ env.BUNDLE }}/lib64/libSDL3.so.0
+        cp /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
+        cp /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
+        cp /usr/lib/x86_64-linux-gnu/libvkd3d-shader.so.1 ${{ env.BUNDLE }}/lib64/libvkd3d-shader.so.1
+        cp /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 ${{ env.BUNDLE }}/lib64/libvkd3d-utils.so.1
+        cp /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-shared.so ${{ env.BUNDLE }}/lib64/libSPIRV-Tools-shared.so
+        cp FNA/lib/FAudio/build/libFAudio.so.0 ${{ env.BUNDLE }}/lib64/libFAudio.so.0
+        cp FNA/lib/FNA3D/build/libFNA3D.so.0 ${{ env.BUNDLE }}/lib64/libFNA3D.so.0
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.BUNDLE }}/lib64
 
     - name: 'Make artifacts'
