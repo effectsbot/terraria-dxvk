@@ -96,9 +96,7 @@ jobs:
 
     - name: 'Setup meson'
       working-directory: meson
-      run: |
-        chmod +x meson.py
-        sudo ln -sf meson.py /usr/bin/meson
+      run: sudo ln -sf meson.py /usr/bin/meson
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
@@ -142,7 +140,7 @@ jobs:
     - name: 'Configure dxvk'
       working-directory: dxvk
       run: |
-        meson setup \
+        python3 meson setup \
         --buildtype release \
         --strip \
         -D build_id=false \
