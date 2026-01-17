@@ -8,9 +8,7 @@ env:
   DXVK_VERSION: "2.5.3"
   FNA_VERSION: "26.01"
   SDL_VERSION: "3.4.0"
-  SDL2-COMPAT_VERSION: "2.32.62"
-  VKD3D_VERSION: "1.18"
-  VULKAN_VERSION: "1.4.335"
+  SDL2_COMPAT_VERSION: "2.32.62"
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -33,7 +31,6 @@ jobs:
         echo "NAME=FNA-Terraria-v${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
-        sudo apt update
         sudo apt install \
           build-essential \
           git \
@@ -73,138 +70,29 @@ jobs:
           meson \
           mingw-w64 \
           glslang-tools \
-          wine64-tools \
           mono-devel \
           wget \
           ccache
 
     - name: 'Fetch sources'
       run: |
-        git clone https://github.com/KhronosGroup/Vulkan-Headers.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://github.com/KhronosGroup/SPIRV-Headers.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://github.com/KhronosGroup/Vulkan-Loader.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://github.com/KhronosGroup/SPIRV-Tools.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://gitlab.winehq.org/wine/vkd3d.git --depth 1 \
-          --branch vkd3d-${{ env.VKD3D_VERSION }}
         git clone https://github.com/libsdl-org/SDL.git --depth 1 \
           --branch release-${{ env.SDL_VERSION }}
         git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
-          --branch release-${{ env.SDL2-COMPAT_VERSION }}
+          --branch release-${{ env.SDL2_COMPAT_VERSION }}
         git clone https://github.com/doitsujin/dxvk.git --recursive --depth 1 \
           --branch v${{ env.DXVK_VERSION }}
         git clone https://github.com/FNA-XNA/FNA.git --recursive --depth 1 \
           --branch ${{ env.FNA_VERSION }}
 
-    - name: 'Fetch patches'
-      run: |
-        wget -P ${{ github.workspace }}/patches https://gitlab.archlinux.org/archlinux/packaging/packages/vulkan-headers/-/raw/main/0001-Remove-Werror.patch
-
     - name: 'Apply patches'
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
 
-        patch -d Vulkan-Headers -sNp1 < patches/0001-Remove-Werror.patch
         patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
-
-    - name: 'Configure Vulkan-Headers'
-      working-directory: Vulkan-Headers
-      run: |
-        cmake \
-        -B build \
-        -G Ninja \
-        -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
-        -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-        -D CMAKE_SKIP_INSTALL_RPATH=ON
-
-    - name: 'Build Vulkan-Headers'
-      working-directory: Vulkan-Headers
-      run: cmake --build build -j$(($(nproc) + 1))
-
-    - name: 'Install Vulkan-Headers'
-      working-directory: Vulkan-Headers
-      run: sudo cmake --install build
-
-    - name: 'Configure SPIRV-Headers'
-      working-directory: SPIRV-Headers
-      run: |
-        cmake \
-        -B build \
-        -G Ninja \
-        -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
-        -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-        -D CMAKE_SKIP_INSTALL_RPATH=ON
-
-    - name: 'Build SPIRV-Headers'
-      working-directory: SPIRV-Headers
-      run: cmake --build build -j$(($(nproc) + 1))
-
-    - name: 'Install SPIRV-Headers'
-      working-directory: SPIRV-Headers
-      run: sudo cmake --install build
-
-    - name: 'Configure Vulkan-Loader'
-      working-directory: Vulkan-Loader
-      run: |
-        cmake \
-        -B build \
-        -G Ninja \
-        -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
-        -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-        -D CMAKE_SKIP_INSTALL_RPATH=ON
-
-    - name: 'Build Vulkan-Loader'
-      working-directory: Vulkan-Loader
-      run: cmake --build build -j$(($(nproc) + 1))
-
-    - name: 'Install Vulkan-Loader'
-      working-directory: Vulkan-Loader
-      run: sudo cmake --install build
-
-    - name: 'Configure SPIRV-Tools'
-      working-directory: SPIRV-Tools
-      run: |
-        cmake \
-        -B build \
-        -G Ninja \
-        -D BUILD_SHARED_LIBS=ON \
-        -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
-        -D CMAKE_INSTALL_SYSCONFDIR=/etc \
-        -D CMAKE_SKIP_INSTALL_RPATH=ON \
-        -D SPIRV-Headers_SOURCE_DIR=/usr \
-        -D SPIRV_TOOLS_BUILD_STATIC=OFF \
-        -D SPIRV_WERROR=OFF
-
-    - name: 'Build SPIRV-Tools'
-      working-directory: SPIRV-Tools
-      run: cmake --build build -j$(($(nproc) + 1))
-
-    - name: 'Install SPIRV-Tools'
-      working-directory: SPIRV-Tools
-      run: sudo cmake --install build
-
-    - name: 'Configure vkd3d'
-      working-directory: vkd3d
-      run: |
-        ./autogen.sh
-        ./configure \
-        --disable-tests \
-        --disable-doxygen-doc \
-        --with-spirv-tools
-
-    - name: 'Build vkd3d'
-      working-directory: vkd3d
-      run: make -j$(($(nproc) + 1))
 
     - name: 'Configure SDL'
       working-directory: SDL
@@ -270,6 +158,7 @@ jobs:
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_SDL3=OFF
 
@@ -282,6 +171,7 @@ jobs:
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_SDL3=OFF
 
@@ -304,18 +194,16 @@ jobs:
     - name: 'Create bundle'
       run: |
         mkdir -p ${{ env.INSTALL }}/lib64
-        cp -L FNA/bin/Release/* ${{ env.INSTALL }}
-        cp -L dxvk/build/src/d3d11/libdxvk_d3d11.so.0 ${{ env.INSTALL }}/lib64
-        cp -L dxvk/build/src/dxgi/libdxvk_dxgi.so.0 ${{ env.INSTALL }}/lib64
-        cp -L SDL/build/libSDL3.so.0 ${{ env.INSTALL }}/lib64
-        cp -L sdl2-compat/build/libSDL2-2.0.so.0 ${{ env.INSTALL }}/lib64
-        cp -L SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/.libs/libvkd3d.so.1 ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/.libs/libvkd3d-shader.so.1 ${{ env.INSTALL }}/lib64
-        cp -L vkd3d/.libs/libvkd3d-utils.so.1 ${{ env.INSTALL }}/lib64
-        cp -L FNA/lib/FAudio/build/libFAudio.so.0 ${{ env.INSTALL }}/lib64
-        cp -L FNA/lib/FNA3D/build/libFNA3D.so.0 ${{ env.INSTALL }}/lib64
-        cp -L FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
+        cp FNA/bin/Release/* ${{ env.INSTALL }}
+        cat dxvk/build/src/d3d11/libdxvk_d3d11.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_d3d11.so.0
+        cat dxvk/build/src/dxgi/libdxvk_dxgi.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_dxgi.so.0
+        cat SDL/build/libSDL3.so.0 > ${{ env.INSTALL }}/lib64/libSDL3.so.0
+        cat sdl2-compat/build/libSDL2-2.0.so.0 > ${{ env.INSTALL }}/lib64/libSDL2-2.0.so.0
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d.so.1
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-utils.so.1
+        cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.INSTALL }}/lib64/libFAudio.so.0
+        cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.INSTALL }}/lib64/libFNA3D.so.0
+        cp FNA/lib/Theorafile/libtheorafile.so > ${{ env.INSTALL }}/lib64
 
     - name: 'Make artifacts'
       run: |
