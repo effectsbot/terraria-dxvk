@@ -94,6 +94,12 @@ jobs:
       run: |
         patch -d FNA -sNp1 < src/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
+    - name: 'Setup meson'
+      working-directory: meson
+      run: |
+        chmod +x meson.py
+        sudo ln -sf meson.py /usr/bin/meson
+
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
 
@@ -136,7 +142,7 @@ jobs:
     - name: 'Configure dxvk'
       working-directory: dxvk
       run: |
-        python3 ${{ github.workspace }}/meson/meson.py setup \
+        meson setup \
         --buildtype release \
         --strip \
         -D build_id=false \
