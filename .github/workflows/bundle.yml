@@ -103,7 +103,7 @@ jobs:
 
     - name: 'Install meson'
       working-directory: meson
-      run: python3 setup.py install --root="/" --optimize=1 --skip-build
+      run: sudo python3 setup.py install --root="/" --optimize=1 --skip-build
 
     - name: 'Configure SDL'
       working-directory: SDL
