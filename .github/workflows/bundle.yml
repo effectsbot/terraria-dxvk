@@ -203,6 +203,7 @@ jobs:
       run: |
         ./autogen.sh
         ./configure \
+        --prefix=/usr \
         --disable-tests \
         --disable-doxygen-doc \
         --with-spirv-tools
@@ -210,6 +211,10 @@ jobs:
     - name: 'Build vkd3d'
       working-directory: vkd3d
       run: make -j$(($(nproc) + 1))
+
+    - name: 'Install vkd3d'
+      working-directory: vkd3d
+      run: make install
 
     - name: 'Configure SDL'
       working-directory: SDL
@@ -252,6 +257,7 @@ jobs:
       run: |
         meson setup \
         --buildtype release \
+        --strip \
         -D enable_d3d8=false \
         -D enable_d3d9=false \
         -D enable_d3d10=false \
@@ -308,22 +314,16 @@ jobs:
       run: |
         mkdir -p ${{ env.INSTALL }}/lib64
         cp FNA/bin/Release/* ${{ env.INSTALL }}
-        cat dxvk/build/src/d3d11/libdxvk_d3d11.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_d3d11.so.0
-        cat dxvk/build/src/dxgi/libdxvk_dxgi.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_dxgi.so.0
-        cat SDL/build/libSDL3.so.0 > ${{ env.INSTALL }}/lib64/libSDL3.so.0
-        cat sdl2-compat/build/libSDL2-2.0.so.0 > ${{ env.INSTALL }}/lib64/libSDL2-2.0.so.0
-        cat vkd3d/.libs/libvkd3d.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d.so.1
-        cat vkd3d/.libs/libvkd3d-shader.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-shader.so.1
-        cat vkd3d/.libs/libvkd3d-utils.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-utils.so.1
+        cat /usr/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_d3d11.so.0
+        cat /usr/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_dxgi.so.0
+        cat /usr/lib/x86_64-linux-gnu/libSDL3.so.0 > ${{ env.INSTALL }}/lib64/libSDL3.so.0
+        cat /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 > ${{ env.INSTALL }}/lib64/libSDL2-2.0.so.0
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d.so.1
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d-shader.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-shader.so.1
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-utils.so.1
+        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-shared.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools-shared.so
         cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.INSTALL }}/lib64/libFAudio.so.0
         cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.INSTALL }}/lib64/libFNA3D.so.0
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools.so
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-diff.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools.so
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-link.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools-link.so
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-lint.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools-lint.so
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-opt.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools-opt.so
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-reduce.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools-reduce.so
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-shared.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools-shared.so
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
     - name: 'Make artifacts'
