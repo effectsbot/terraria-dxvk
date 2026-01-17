@@ -59,7 +59,7 @@ jobs:
           meson \
           mingw-w64 \
           glslang-tools \
-          dotnet-sdk-10.0 \
+          dotnet-sdk-8.0 \
           libvkd3d-utils1 \
           libvkd3d-shader1 \
           ccache
