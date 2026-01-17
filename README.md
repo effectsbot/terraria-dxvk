@@ -1,4 +1,4 @@
-# terraria-dxvk
+# FNA-Terraria
 This repository contains up to date builds of [FNA](https://github.com/FNA-XNA/FNA) for use with Terraria on Linux. It also includes additional libraries to allow use of FNA3D's D3D11 driver, which uses [dxvk](https://github.com/doitsujin/dxvk) behind the scenes.
 
 # How do I use this?
