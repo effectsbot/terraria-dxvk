@@ -251,10 +251,7 @@ jobs:
         -D enable_d3d8=false \
         -D enable_d3d9=false \
         -D enable_d3d10=false \
-        -D enable_d3d11=true \
-        -D enable_dxgi=true \
         -D native_glfw=disabled \
-        -D native_sdl2=enabled \
         -D native_sdl3=disabled \
         build
 
