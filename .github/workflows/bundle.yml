@@ -28,7 +28,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "NAME=${{ env.BUNDLE_VERSION }}-$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}-$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         sudo apt install \
@@ -87,7 +87,7 @@ jobs:
 
     - name: 'Apply patches'
       run: |
-        echo "INSTALL=${{ github.workspace }}/FNA-Terraria-${{ env.NAME }}" >> $GITHUB_ENV
+        echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
 
         patch -d FNA -sNp1 < src/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
