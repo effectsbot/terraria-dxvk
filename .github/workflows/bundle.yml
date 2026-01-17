@@ -32,7 +32,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}+$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
 
         sudo apt-get install -y \
           build-essential \
