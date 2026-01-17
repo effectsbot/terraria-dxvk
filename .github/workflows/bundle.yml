@@ -11,7 +11,7 @@ env:
   SDL2_COMPAT_VERSION: "2.32.62"
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -74,6 +74,7 @@ jobs:
           glslang-tools \
           mono-devel \
           libvkd3d-utils1 \
+          libvkd3d-shader1 \
           ccache
 
     - name: 'Fetch sources'
@@ -203,6 +204,7 @@ jobs:
         cat sdl2-compat/build/libSDL2-2.0.so.0 > ${{ env.INSTALL }}/lib64/libSDL2-2.0.so.0
         cat /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d.so.1
         cat /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-utils.so.1
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d-shader.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-shader.so.1
         cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.INSTALL }}/lib64/libFAudio.so.0
         cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.INSTALL }}/lib64/libFNA3D.so.0
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
