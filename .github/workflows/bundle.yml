@@ -208,8 +208,8 @@ jobs:
       run: |
         TARBALL="FNA-Terraria-${{ env.TAG }}.tar.xz"
 
-        cd "${{ env.INSTALL }}"/..
-        XZ_OPT=-9 tar -Jcf "$TARBALL" "$(basename ${{ env.INSTALL }})"
+        cd $(dirname ${{ env.INSTALL }})
+        XZ_OPT=-9 tar -Jcf "${{ env.TARBALL }}" "$(basename ${{ env.INSTALL }})"
 
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v4
