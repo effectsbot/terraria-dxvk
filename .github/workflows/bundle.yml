@@ -19,6 +19,9 @@ jobs:
     # Sourced from mono-project.com/download/stable
     - name: 'Add Mono repository'
       run: |
+        echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
+        echo "TAG=$(git rev-parse --short ${{ github.sha }})"
+
         sudo apt update
         sudo apt install dirmngr ca-certificates gnupg
         sudo gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
@@ -28,8 +31,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}-$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
-        echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
+        echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}-${{ env.TAG }}" >> $GITHUB_ENV
 
         sudo apt install \
           build-essential \
@@ -76,6 +78,8 @@ jobs:
 
     - name: 'Fetch sources'
       run: |
+        echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
+
         git clone https://github.com/libsdl-org/SDL.git --depth 1 \
           --branch release-${{ env.SDL_VERSION }}
         git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
@@ -87,8 +91,6 @@ jobs:
 
     - name: 'Apply patches'
       run: |
-        echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
-
         patch -d FNA -sNp1 < src/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
     - name: 'Configure ccache'
@@ -208,7 +210,7 @@ jobs:
     - name: 'Make artifacts'
       run: |
         cd "${{ env.INSTALL }}"/..
-        XZ_OPT=-9 tar -Jcf "${{ env.NAME }}" "$(basename ${{ env.INSTALL }})"
+        XZ_OPT=-9 tar -Jcf "${{ env.NAME }}.tar.xz" "$(basename ${{ env.INSTALL }})"
 
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v4
