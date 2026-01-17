@@ -79,7 +79,7 @@ jobs:
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
 
-        git clone https://github.com/mesonbuild/meson.git --recursive --depth 1 \
+        git clone https://github.com/mesonbuild/meson.git --depth 1 \
           --branch ${{ env.MESON_VERSION }}
         git clone https://github.com/libsdl-org/SDL.git --depth 1 \
           --branch release-${{ env.SDL_VERSION }}
@@ -136,7 +136,7 @@ jobs:
     - name: 'Configure dxvk'
       working-directory: dxvk
       run: |
-        ${{ github.workspace }}/meson/meson.py setup \
+        python3 ${{ github.workspace }}/meson/meson.py setup \
         --buildtype release \
         --strip \
         -D build_id=false \
