@@ -23,18 +23,18 @@ jobs:
     # Sourced from mono-project.com/download/stable
     - name: 'Add Mono repository'
       run: |
-        sudo apt-get update -y
-        sudo apt-get install -y dirmngr ca-certificates gnupg
-        sudo gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-        sudo chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
-        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/debian stable-buster main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-        sudo apt-get update -y
+        apt update -y
+        apt install -y dirmngr ca-certificates gnupg
+        gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/debian stable-buster main" | tee /etc/apt/sources.list.d/mono-official-stable.list
+        apt update -y
 
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
 
-        sudo apt-get install -y \
+        apt install -y \
           build-essential \
           git \
           make \
@@ -121,7 +121,7 @@ jobs:
 
     - name: 'Install meson'
       working-directory: meson
-      run: sudo python3 setup.py install --root="/" --optimize=1 --skip-build
+      run: python3 setup.py install --root="/" --optimize=1 --skip-build
 
     - name: 'Configure Vulkan-Headers'
       working-directory: Vulkan-Headers
@@ -139,7 +139,7 @@ jobs:
 
     - name: 'Install Vulkan-Headers'
       working-directory: Vulkan-Headers
-      run: sudo cmake --install build
+      run: cmake --install build
 
     - name: 'Configure SPIRV-Headers'
       working-directory: SPIRV-Headers
@@ -157,7 +157,7 @@ jobs:
 
     - name: 'Install SPIRV-Headers'
       working-directory: SPIRV-Headers
-      run: sudo cmake --install build
+      run: cmake --install build
 
     - name: 'Configure Vulkan-Loader'
       working-directory: Vulkan-Loader
@@ -175,7 +175,7 @@ jobs:
 
     - name: 'Install Vulkan-Loader'
       working-directory: Vulkan-Loader
-      run: sudo cmake --install build
+      run: cmake --install build
 
     - name: 'Configure SPIRV-Tools'
       working-directory: SPIRV-Tools
@@ -197,7 +197,7 @@ jobs:
 
     - name: 'Install SPIRV-Tools'
       working-directory: SPIRV-Tools
-      run: sudo cmake --install build
+      run: cmake --install build
 
     - name: 'Configure vkd3d'
       working-directory: vkd3d
@@ -234,7 +234,7 @@ jobs:
 
     - name: 'Install SDL'
       working-directory: SDL
-      run: sudo cmake --install build
+      run: cmake --install build
 
     - name: 'Configure sdl2-compat'
       working-directory: sdl2-compat
@@ -251,7 +251,7 @@ jobs:
 
     - name: 'Install sdl2-compat'
       working-directory: sdl2-compat
-      run: sudo cmake --install build
+      run: cmake --install build
 
     - name: 'Configure dxvk'
       working-directory: dxvk
@@ -271,7 +271,7 @@ jobs:
 
     - name: 'Install dxvk'
       working-directory: dxvk
-      run: sudo ninja -C build install
+      run: ninja -C build install
 
     - name: 'Configure FAudio'
       working-directory: FNA/lib/FAudio
