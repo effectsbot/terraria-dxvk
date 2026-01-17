@@ -101,6 +101,14 @@ jobs:
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
 
+    - name: 'Build meson'
+      working-directory: meson
+      run: python3 setup.py build
+
+    - name: 'Install meson'
+      working-directory: meson
+      run: python3 setup.py install --root="/" --optimize=1 --skip-build
+
     - name: 'Configure SDL'
       working-directory: SDL
       run: |
@@ -140,7 +148,7 @@ jobs:
     - name: 'Configure dxvk'
       working-directory: dxvk
       run: |
-        python3 /usr/bin/meson setup \
+        meson setup \
         --buildtype release \
         --strip \
         -D build_id=false \
