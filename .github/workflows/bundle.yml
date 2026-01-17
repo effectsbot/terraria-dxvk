@@ -74,17 +74,18 @@ jobs:
           glslang-tools \
           ninja-build \
           mono-devel \
-          wine64-tools \
-          flex \
-          bison \
           autoconf \
+          automake \
+          bison \
+          flex \
           libjson-perl \
           libtool \
+          wine64-tools \
           ccache
 
     - name: 'Fetch sources'
       run: |
-        echo "INSTALL=$GITHUB_WORKSPACE/${{ env.NAME }}" >> $GITHUB_ENV
+        echo "BUNDLE=$GITHUB_WORKSPACE/${{ env.NAME }}" >> $GITHUB_ENV
 
         git clone https://github.com/mesonbuild/meson.git --depth 1 \
           --branch ${{ env.MESON_VERSION }}
@@ -312,24 +313,24 @@ jobs:
 
     - name: 'Create bundle'
       run: |
-        mkdir -p ${{ env.INSTALL }}/lib64
-        cp FNA/bin/Release/* ${{ env.INSTALL }}
-        cat /usr/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_d3d11.so.0
-        cat /usr/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_dxgi.so.0
-        cat /usr/lib/x86_64-linux-gnu/libSDL3.so.0 > ${{ env.INSTALL }}/lib64/libSDL3.so.0
-        cat /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 > ${{ env.INSTALL }}/lib64/libSDL2-2.0.so.0
-        cat /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d.so.1
-        cat /usr/lib/x86_64-linux-gnu/libvkd3d-shader.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-shader.so.1
-        cat /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-utils.so.1
-        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-shared.so > ${{ env.INSTALL }}/lib64/libSPIRV-Tools-shared.so
-        cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.INSTALL }}/lib64/libFAudio.so.0
-        cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.INSTALL }}/lib64/libFNA3D.so.0
-        cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
+        mkdir -p ${{ env.BUNDLE }}/lib64
+        cp FNA/bin/Release/* ${{ env.BUNDLE }}
+        cat /usr/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
+        cat /usr/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
+        cat /usr/lib/x86_64-linux-gnu/libSDL3.so.0 > ${{ env.BUNDLE }}/lib64/libSDL3.so.0
+        cat /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 > ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d-shader.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-shader.so.1
+        cat /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-utils.so.1
+        cat /usr/lib/x86_64-linux-gnu/libSPIRV-Tools-shared.so > ${{ env.BUNDLE }}/lib64/libSPIRV-Tools-shared.so
+        cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.BUNDLE }}/lib64/libFAudio.so.0
+        cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.BUNDLE }}/lib64/libFNA3D.so.0
+        cp FNA/lib/Theorafile/libtheorafile.so ${{ env.BUNDLE }}/lib64
 
     - name: 'Make artifacts'
       run: |
-        cd "${{ env.INSTALL }}"/..
-        XZ_OPT=-9 tar -Jcf "${{ env.NAME }}.tar.xz" "$(basename ${{ env.INSTALL }})"
+        cd "${{ env.BUNDLE }}"/..
+        XZ_OPT=-9 tar -Jcf "${{ env.NAME }}.tar.xz" "$(basename ${{ env.BUNDLE }})"
 
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v4
