@@ -315,8 +315,8 @@ jobs:
       run: |
         mkdir -p ${{ env.BUNDLE }}/lib64
         cp FNA/bin/Release/* ${{ env.BUNDLE }}
-        cat /usr/local/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
-        cat /usr/local/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
+        cat /usr/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
+        cat /usr/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
         cat /usr/lib/x86_64-linux-gnu/libSDL3.so.0 > ${{ env.BUNDLE }}/lib64/libSDL3.so.0
         cat /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 > ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
         cat /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
