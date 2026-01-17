@@ -5,14 +5,15 @@ permissions:
   pull-requests: read
 env:
   BUNDLE_VERSION: "0.3.0"
-  DXVK_VERSION: "2.5.3"
-  FNA_VERSION: "26.01"
+  MESON_VERSION: "0.58.2"
   SDL_VERSION: "3.4.0"
   SDL2_COMPAT_VERSION: "2.32.62"
+  DXVK_VERSION: "2.5.3"
+  FNA_VERSION: "26.01"
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk:beta
+    container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -21,17 +22,17 @@ jobs:
     - name: 'Add Mono repository'
       run: |
         sudo apt update
-        sudo apt install ca-certificates gnupg
+        sudo apt install dirmngr ca-certificates gnupg
         sudo gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
         sudo chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
-        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/debian stable-buster main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
         sudo apt update
 
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}+$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
-        sudo apt install \
+        sudo apt install -y \
           build-essential \
           git \
           make \
@@ -67,18 +68,19 @@ jobs:
           libwayland-dev \
           libdecor-0-dev \
           liburing-dev \
-          meson \
           mingw-w64 \
           glslang-tools \
+          ninja-build \
           mono-devel \
           libvkd3d-utils1 \
-          libvkd3d-shader1 \
           ccache
 
     - name: 'Fetch sources'
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
 
+        git clone https://github.com/mesonbuild/meson.git --recursive --depth 1 \
+          --branch ${{ env.MESON_VERSION}}
         git clone https://github.com/libsdl-org/SDL.git --depth 1 \
           --branch release-${{ env.SDL_VERSION }}
         git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
@@ -134,7 +136,7 @@ jobs:
     - name: 'Configure dxvk'
       working-directory: dxvk
       run: |
-        meson setup \
+        ${{ github.workspace }}/meson/meson.py setup \
         --buildtype release \
         --strip \
         -D build_id=false \
