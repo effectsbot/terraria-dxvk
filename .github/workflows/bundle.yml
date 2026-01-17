@@ -80,7 +80,7 @@ jobs:
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
 
         git clone https://github.com/mesonbuild/meson.git --recursive --depth 1 \
-          --branch ${{ env.MESON_VERSION}}
+          --branch ${{ env.MESON_VERSION }}
         git clone https://github.com/libsdl-org/SDL.git --depth 1 \
           --branch release-${{ env.SDL_VERSION }}
         git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
