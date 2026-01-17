@@ -71,7 +71,7 @@ jobs:
           mingw-w64 \
           glslang-tools \
           mono-devel \
-          wget \
+          libvkd3d-utils1 \
           ccache
 
     - name: 'Fetch sources'
