@@ -74,6 +74,11 @@ jobs:
           glslang-tools \
           ninja-build \
           mono-devel \
+          wine64-tools \
+          flex \
+          bison \
+          autoconf \
+          libtool \
           ccache
 
     - name: 'Fetch sources'
