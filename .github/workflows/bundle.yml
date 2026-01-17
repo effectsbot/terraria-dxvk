@@ -101,7 +101,7 @@ jobs:
 
     - name: 'Fetch patches'
       run: |
-        wget -P patches https://gitlab.archlinux.org/archlinux/packaging/packages/vulkan-headers/-/raw/main/0001-Remove-Werror.patch
+        wget -P ${{ github.workspace }}/patches https://gitlab.archlinux.org/archlinux/packaging/packages/vulkan-headers/-/raw/main/0001-Remove-Werror.patch
 
     - name: 'Apply patches'
       run: |
@@ -211,6 +211,7 @@ jobs:
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D SDL_STATIC=OFF \
@@ -229,6 +230,7 @@ jobs:
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr
 
@@ -244,9 +246,7 @@ jobs:
       working-directory: dxvk
       run: |
         meson setup \
-        --64-only \
         --buildtype release \
-        --no-package \
         --strip \
         -D enable_d3d8=false \
         -D enable_d3d9=false \
@@ -258,7 +258,11 @@ jobs:
         -D native_sdl3=disabled \
         build
 
-    - name: 'Build & install dxvk'
+    - name: 'Build dxvk'
+      working-directory: dxvk
+      run: ninja -C build
+
+    - name: 'Install dxvk'
       working-directory: dxvk
       run: sudo ninja -C build install
 
