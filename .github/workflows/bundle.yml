@@ -78,6 +78,7 @@ jobs:
           flex \
           bison \
           autoconf \
+          libjson-perl \
           libtool \
           ccache
 
@@ -316,6 +317,12 @@ jobs:
         cat vkd3d/.libs/libvkd3d-utils.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-utils.so.1
         cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.INSTALL }}/lib64/libFAudio.so.0
         cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.INSTALL }}/lib64/libFNA3D.so.0
+        cp SPIRV-Tools/build/source/libSPIRV-Tools.so ${{ env.INSTALL }}/lib64
+        cp SPIRV-Tools/build/source/libSPIRV-Tools-diff.so ${{ env.INSTALL }}/lib64
+        cp SPIRV-Tools/build/source/libSPIRV-Tools-link.so ${{ env.INSTALL }}/lib64
+        cp SPIRV-Tools/build/source/libSPIRV-Tools-lint.so ${{ env.INSTALL }}/lib64
+        cp SPIRV-Tools/build/source/libSPIRV-Tools-opt.so ${{ env.INSTALL }}/lib64
+        cp SPIRV-Tools/build/source/libSPIRV-Tools-reduce.so ${{ env.INSTALL }}/lib64
         cp SPIRV-Tools/build/source/libSPIRV-Tools-shared.so ${{ env.INSTALL }}/lib64
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
