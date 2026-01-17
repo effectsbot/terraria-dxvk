@@ -18,6 +18,15 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
+    - name: 'Add Mono repository'
+      run: |
+        sudo apt update
+        sudo apt install dirmngr ca-certificates gnupg
+        sudo gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        sudo chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/debian stable-raspbianbuster main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+        sudo apt update
+
     - name: 'Install build dependencies'
       run: |
         echo "NAME=terraria-dxvk-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
@@ -63,8 +72,11 @@ jobs:
           meson \
           mingw-w64 \
           glslang-tools \
-          mono-mcs \
           wine64-tools \
+          flex \
+          bison \
+          mesa-vulkan-drivers \
+          mono-devel \
           ccache
 
     - name: 'Fetch sources'
@@ -93,7 +105,6 @@ jobs:
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
 
         patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
-        patch -d FNA -sNp1 < patches/0001-Add-SDL2_image.cs-to-MakeFile.patch
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
@@ -254,9 +265,13 @@ jobs:
       working-directory: FNA/lib/Theorafile
       run: make -j$(($(nproc) + 1))
 
+    - name: 'Configure FNA'
+      working-directory: FNA
+      run: curl -o FNA.Settings.props https://flibitijibibo.com/Terraria.Settings.props
+
     - name: 'Build FNA'
       working-directory: FNA
-      run: make release -j$(($(nproc) + 1))
+      run: msbuild /p:Configuration=Release /p:Platform=x86 FNA.sln
 
     - name: 'Create bundle'
       run: |
