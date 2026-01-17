@@ -184,7 +184,7 @@ jobs:
     - name: 'Create bundle'
       run: |
         mkdir -p ${{ env.INSTALL }}/lib64
-        cp FNA/bin/Release/* ${{ env.INSTALL }}
+        cp FNA/bin/Release/net8.0/* ${{ env.INSTALL }}
         cat dxvk/build/src/d3d11/libdxvk_d3d11.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_d3d11.so.0
         cat dxvk/build/src/dxgi/libdxvk_dxgi.so.0 > ${{ env.INSTALL }}/lib64/libdxvk_dxgi.so.0
         cat SDL/build/libSDL3.so.0 > ${{ env.INSTALL }}/lib64/libSDL3.so.0
