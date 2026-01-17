@@ -30,7 +30,6 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "GITHUB_WORKSPACE === $GITHUB_WORKSPACE"
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}+$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
         sudo apt-get install -y \
@@ -78,7 +77,8 @@ jobs:
 
     - name: 'Fetch sources'
       run: |
-        echo "INSTALL=${{ GITHUB_WORKSPACE }}/${{ env.NAME }}" >> $GITHUB_ENV
+        echo $GITHUB_WORKSPACE
+        echo "INSTALL=$GITHUB_WORKSPACE/${{ env.NAME }}" >> $GITHUB_ENV
 
         git clone https://github.com/mesonbuild/meson.git --depth 1 \
           --branch ${{ env.MESON_VERSION }}
@@ -197,7 +197,7 @@ jobs:
 
     - name: 'Configure FNA'
       working-directory: FNA
-      run: cp ${{ GITHUB_WORKSPACE }}/src/Terraria.Settings.props ./FNA.Settings.props
+      run: cp $GITHUB_WORKSPACE/src/Terraria.Settings.props ./FNA.Settings.props
 
     - name: 'Build FNA'
       working-directory: FNA
