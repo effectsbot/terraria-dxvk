@@ -4,6 +4,7 @@ permissions:
   contents: write
   pull-requests: read
 env:
+  BUNDLE_VERSION: "0.3.0"
   DXVK_VERSION: "2.5.3"
   FNA_VERSION: "26.01"
   SDL_VERSION: "3.4.0"
@@ -27,7 +28,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "TAG=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        echo "NAME=${{ BUNDLE_VERSION }}-$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         sudo apt install \
@@ -206,13 +207,11 @@ jobs:
 
     - name: 'Make artifacts'
       run: |
-        TARBALL="FNA-Terraria-${{ env.TAG }}.tar.xz"
-
-        cd $(dirname ${{ env.INSTALL }})
-        XZ_OPT=-9 tar -Jcf "${{ env.TARBALL }}" "$(basename ${{ env.INSTALL }})"
+        cd "${{ env.INSTALL }}"/..
+        XZ_OPT=-9 tar -Jcf "${{ env.NAME }}" "$(basename ${{ env.INSTALL }})"
 
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.TARBALL }}
-        path: ${{ env.TARBALL }}.tar.xz
+        name: ${{ env.NAME }}
+        path: ${{ env.NAME }}.tar.xz
