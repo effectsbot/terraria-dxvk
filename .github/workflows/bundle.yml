@@ -30,6 +30,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
+        echo "GITHUB_WORKSPACE === $GITHUB_WORKSPACE"
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}+$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
         sudo apt-get install -y \
