@@ -5,7 +5,7 @@ permissions:
   pull-requests: read
 env:
   BUNDLE_VERSION: "0.3.0"
-  DXVK_VERSION: "2.7.1"
+  DXVK_VERSION: "2.5.3"
   FNA_VERSION: "26.01"
   SDL_VERSION: "3.4.0"
   SDL2-COMPAT_VERSION: "2.32.62"
@@ -16,8 +16,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
+    # Sourced from mono-project.com/download/stable
     - name: 'Add Mono repository'
       run: |
         sudo apt update
@@ -29,7 +30,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "NAME=terraria-dxvk-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
+        echo "NAME=FNA-Terraria-v${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         sudo apt update
@@ -73,37 +74,40 @@ jobs:
           mingw-w64 \
           glslang-tools \
           wine64-tools \
-          flex \
-          bison \
-          mesa-vulkan-drivers \
           mono-devel \
+          wget \
           ccache
 
     - name: 'Fetch sources'
       run: |
-        git clone https://github.com/doitsujin/dxvk.git --recursive --depth 1 \
-          --branch v${{ env.DXVK_VERSION }}
-        git clone https://github.com/FNA-XNA/FNA.git --recursive --depth 1 \
-          --branch ${{ env.FNA_VERSION }}
-        git clone https://github.com/libsdl-org/SDL.git --depth 1 \
-          --branch release-${{ env.SDL_VERSION }}
-        git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
-          --branch release-${{ env.SDL2-COMPAT_VERSION }}
+        git clone https://github.com/KhronosGroup/Vulkan-Headers.git --depth 1 \
+          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
         git clone https://github.com/KhronosGroup/SPIRV-Headers.git --depth 1 \
+          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
+        git clone https://github.com/KhronosGroup/Vulkan-Loader.git --depth 1 \
           --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
         git clone https://github.com/KhronosGroup/SPIRV-Tools.git --depth 1 \
           --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
         git clone https://gitlab.winehq.org/wine/vkd3d.git --depth 1 \
           --branch vkd3d-${{ env.VKD3D_VERSION }}
-        git clone https://github.com/KhronosGroup/Vulkan-Headers.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://github.com/KhronosGroup/Vulkan-Loader.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
+        git clone https://github.com/libsdl-org/SDL.git --depth 1 \
+          --branch release-${{ env.SDL_VERSION }}
+        git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
+          --branch release-${{ env.SDL2-COMPAT_VERSION }}
+        git clone https://github.com/doitsujin/dxvk.git --recursive --depth 1 \
+          --branch v${{ env.DXVK_VERSION }}
+        git clone https://github.com/FNA-XNA/FNA.git --recursive --depth 1 \
+          --branch ${{ env.FNA_VERSION }}
+
+    - name: 'Fetch patches'
+      run: |
+        wget -P $HOME/patches https://gitlab.archlinux.org/archlinux/packaging/packages/vulkan-headers/-/raw/main/0001-Remove-Werror.patch
 
     - name: 'Apply patches'
       run: |
         echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
 
+        patch -d Vulkan-Headers -sNp1 < patches/0001-Remove-Werror.patch
         patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
     - name: 'Configure ccache'
@@ -114,54 +118,64 @@ jobs:
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON
 
-    - name: 'Build & install Vulkan-Headers'
+    - name: 'Build Vulkan-Headers'
       working-directory: Vulkan-Headers
-      run: |
-        cmake --build build -j$(($(nproc) + 1))
-        sudo cmake --install build
+      run: cmake --build build -j$(($(nproc) + 1))
+
+    - name: 'Install Vulkan-Headers'
+      working-directory: Vulkan-Headers
+      run: sudo cmake --install build
 
     - name: 'Configure SPIRV-Headers'
       working-directory: SPIRV-Headers
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON
 
-    - name: 'Build & install SPIRV-Headers'
+    - name: 'Build SPIRV-Headers'
       working-directory: SPIRV-Headers
-      run: |
-        cmake --build build -j$(($(nproc) + 1))
-        sudo cmake --install build
+      run: cmake --build build -j$(($(nproc) + 1))
+
+    - name: 'Install SPIRV-Headers'
+      working-directory: SPIRV-Headers
+      run: sudo cmake --install build
 
     - name: 'Configure Vulkan-Loader'
       working-directory: Vulkan-Loader
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON
 
-    - name: 'Build & install Vulkan-Loader'
+    - name: 'Build Vulkan-Loader'
       working-directory: Vulkan-Loader
-      run: |
-        cmake --build build -j$(($(nproc) + 1))
-        sudo cmake --install build
+      run: cmake --build build -j$(($(nproc) + 1))
+
+    - name: 'Install Vulkan-Loader'
+      working-directory: Vulkan-Loader
+      run: sudo cmake --install build
 
     - name: 'Configure SPIRV-Tools'
       working-directory: SPIRV-Tools
       run: |
         cmake \
         -B build \
+        -G Ninja \
         -D BUILD_SHARED_LIBS=ON \
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
@@ -171,18 +185,19 @@ jobs:
         -D SPIRV_TOOLS_BUILD_STATIC=OFF \
         -D SPIRV_WERROR=OFF
 
-    - name: 'Build & install SPIRV-Tools'
+    - name: 'Build SPIRV-Tools'
       working-directory: SPIRV-Tools
-      run: |
-        cmake --build build -j$(($(nproc) + 1))
-        sudo cmake --install build
+      run: cmake --build build -j$(($(nproc) + 1))
+
+    - name: 'Install SPIRV-Tools'
+      working-directory: SPIRV-Tools
+      run: sudo cmake --install build
 
     - name: 'Configure vkd3d'
       working-directory: vkd3d
       run: |
         ./autogen.sh
         ./configure \
-        --prefix=/usr \
         --disable-tests \
         --disable-doxygen-doc \
         --with-spirv-tools
@@ -201,11 +216,13 @@ jobs:
         -D SDL_STATIC=OFF \
         -D SDL_RPATH=OFF
 
-    - name: 'Build & install SDL'
+    - name: 'Build SDL'
       working-directory: SDL
-      run: |
-        cmake --build build -j$(($(nproc) + 1))
-        sudo cmake --install build
+      run: cmake --build build -j$(($(nproc) + 1))
+
+    - name: 'Install SDL'
+      working-directory: SDL
+      run: sudo cmake --install build
 
     - name: 'Configure sdl2-compat'
       working-directory: sdl2-compat
@@ -215,22 +232,30 @@ jobs:
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr
 
-    - name: 'Build & install sdl2-compat'
+    - name: 'Build sdl2-compat'
       working-directory: sdl2-compat
-      run: |
-        cmake --build build -j$(($(nproc) + 1))
-        sudo cmake --install build
+      run: cmake --build build -j$(($(nproc) + 1))
+
+    - name: 'Install sdl2-compat'
+      working-directory: sdl2-compat
+      run: sudo cmake --install build
 
     - name: 'Configure dxvk'
       working-directory: dxvk
       run: |
         meson setup \
+        --64-only \
+        --buildtype release \
+        --no-package \
+        --strip \
         -D enable_d3d8=false \
         -D enable_d3d9=false \
         -D enable_d3d10=false \
+        -D enable_d3d11=true \
+        -D enable_dxgi=true \
         -D native_glfw=disabled \
+        -D native_sdl2=enabled \
         -D native_sdl3=disabled \
-        --buildtype release \
         build
 
     - name: 'Build & install dxvk'
@@ -271,7 +296,7 @@ jobs:
 
     - name: 'Build FNA'
       working-directory: FNA
-      run: msbuild /p:Configuration=Release /p:Platform=x86 FNA.sln
+      run: msbuild /p:Configuration=Release /p:Platform=x64 FNA.sln
 
     - name: 'Create bundle'
       run: |
