@@ -28,7 +28,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "NAME=${{ BUNDLE_VERSION }}-$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        echo "NAME=${{ env.BUNDLE_VERSION }}-$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         sudo apt install \
