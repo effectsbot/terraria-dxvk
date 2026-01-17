@@ -4,7 +4,6 @@ permissions:
   contents: write
   pull-requests: read
 env:
-  BUNDLE_VERSION: "0.3.0"
   DXVK_VERSION: "2.5.3"
   FNA_VERSION: "26.01"
   SDL_VERSION: "3.4.0"
@@ -28,7 +27,7 @@ jobs:
 
     - name: 'Install build dependencies'
       run: |
-        echo "NAME=FNA-Terraria-v${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
+        echo "TAG=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         sudo apt install \
@@ -87,7 +86,7 @@ jobs:
 
     - name: 'Apply patches'
       run: |
-        echo "INSTALL=${{ github.workspace }}/${{ env.NAME }}" >> $GITHUB_ENV
+        echo "INSTALL=${{ github.workspace }}/FNA-Terraria-${{ env.TAG }}" >> $GITHUB_ENV
 
         patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
@@ -185,7 +184,7 @@ jobs:
 
     - name: 'Configure FNA'
       working-directory: FNA
-      run: curl -o FNA.Settings.props https://flibitijibibo.com/Terraria.Settings.props
+      run: cp ${{ github.workspace }}/src/Terraria.Settings.props ./FNA.Settings.props
 
     - name: 'Build FNA'
       working-directory: FNA
@@ -203,15 +202,17 @@ jobs:
         cat /usr/lib/x86_64-linux-gnu/libvkd3d-utils.so.1 > ${{ env.INSTALL }}/lib64/libvkd3d-utils.so.1
         cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.INSTALL }}/lib64/libFAudio.so.0
         cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.INSTALL }}/lib64/libFNA3D.so.0
-        cp FNA/lib/Theorafile/libtheorafile.so > ${{ env.INSTALL }}/lib64
+        cp FNA/lib/Theorafile/libtheorafile.so ${{ env.INSTALL }}/lib64
 
     - name: 'Make artifacts'
       run: |
-        cd $(dirname ${{ env.INSTALL }})
-        XZ_OPT=-9 tar -Jcf ${{ env.NAME }}.tar.xz $(basename ${{ env.INSTALL }})
+        TARBALL="FNA-Terraria-${{ env.TAG }}.tar.xz"
+
+        cd "${{ env.INSTALL }}"/..
+        XZ_OPT=-9 tar -Jcf "$TARBALL" "$(basename ${{ env.INSTALL }})"
 
     - name: 'Upload artifacts'
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.NAME }}
-        path: ${{ env.NAME }}.tar.xz
+        name: ${{ env.TARBALL }}
+        path: ${{ env.TARBALL }}.tar.xz
