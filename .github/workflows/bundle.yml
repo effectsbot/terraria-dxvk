@@ -87,7 +87,7 @@ jobs:
 
     - name: 'Apply patches'
       run: |
-        echo "INSTALL=${{ github.workspace }}/FNA-Terraria-${{ env.TAG }}" >> $GITHUB_ENV
+        echo "INSTALL=${{ github.workspace }}/FNA-Terraria-${{ env.NAME }}" >> $GITHUB_ENV
 
         patch -d FNA -sNp1 < src/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
