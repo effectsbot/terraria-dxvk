@@ -81,7 +81,7 @@ jobs:
           kernel-devel \
           patch \
           diffutils \
-          p7zip \
+          dpkg \
           ccache
 
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-13.1.1-1.el8.x86_64.rpm &
@@ -120,10 +120,8 @@ jobs:
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
 
-        7za -y x ./libsndio7.0_1.5.0-3_amd64.deb
-        tar xf ./data.tar
-        7za -y x ./libsndio-dev_1.5.0-3_amd64.deb
-        tar xf ./data.tar
+        dpkg-deb -x ./libsndio7.0_1.5.0-3_amd64.deb .
+        dpkg-deb -x ./libsndio-dev_1.5.0-3_amd64.deb .
 
         install -m 755 ./usr/lib/x86_64-linux-gnu/libsndio.so.7.0 /usr/lib64/libsndio.so.0
         install -m 644 ./usr/include/sndio.h /usr/include/sndio.h
