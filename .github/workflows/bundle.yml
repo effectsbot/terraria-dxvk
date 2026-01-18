@@ -86,6 +86,7 @@ jobs:
           gcc-c++ \
           kernel-devel \
           patch \
+          diffutils \
           ccache
 
     - name: 'Fetch sources'
