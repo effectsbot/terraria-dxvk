@@ -34,10 +34,10 @@ jobs:
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
-        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-15/root/usr/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
 
         dnf ${{ env.DNF_OPTS }} install -y \
-          gcc-toolset-15 \
+          gcc-toolset-10 \
           git-core \
           cmake \
           alsa-lib-devel \
@@ -135,7 +135,7 @@ jobs:
         cmake \
         -B build \
         -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON
 
@@ -153,7 +153,7 @@ jobs:
         cmake \
         -B build \
         -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON
 
@@ -171,7 +171,7 @@ jobs:
         cmake \
         -B build \
         -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON
 
@@ -190,7 +190,7 @@ jobs:
         -B build \
         -D BUILD_SHARED_LIBS=ON \
         -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON \
         -D SPIRV-Headers_SOURCE_DIR=/usr \
@@ -212,7 +212,7 @@ jobs:
       run: |
         ./autogen.sh
         ./configure \
-        --prefix=/usr \
+        --prefix=/usr/local \
         --disable-tests \
         --disable-doxygen-doc \
         --with-spirv-tools
@@ -232,7 +232,7 @@ jobs:
         -B build \
         -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D SDL_STATIC=OFF \
         -D SDL_RPATH=OFF
 
@@ -251,7 +251,7 @@ jobs:
         -B build \
         -G Ninja \
         -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr
+        -D CMAKE_INSTALL_PREFIX=/usr/local
 
     - name: 'Build sdl2-compat'
       working-directory: sdl2-compat
@@ -321,12 +321,12 @@ jobs:
         cp FNA/bin/Release/* ${{ env.BUNDLE }}
         cat /usr/local/lib64/libdxvk_d3d11.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
         cat /usr/local/lib64/libdxvk_dxgi.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
-        cat /usr/lib64/libSDL3.so.0 > ${{ env.BUNDLE }}/lib64/libSDL3.so.0
-        cat /usr/lib64/libSDL2-2.0.so.0 > ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
-        cat /usr/lib64/libvkd3d.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
-        cat /usr/lib64/libvkd3d-shader.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-shader.so.1
-        cat /usr/lib64/libvkd3d-utils.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-utils.so.1
-        cat /usr/lib64/libSPIRV-Tools-shared.so > ${{ env.BUNDLE }}/lib64/libSPIRV-Tools-shared.so
+        cat /usr/local/lib64/libSDL3.so.0 > ${{ env.BUNDLE }}/lib64/libSDL3.so.0
+        cat /usr/local/lib64/libSDL2-2.0.so.0 > ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
+        cat /usr/local/lib64/libvkd3d.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
+        cat /usr/local/lib64/libvkd3d-shader.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-shader.so.1
+        cat /usr/local/lib64/libvkd3d-utils.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-utils.so.1
+        cat /usr/local/lib64/libSPIRV-Tools-shared.so > ${{ env.BUNDLE }}/lib64/libSPIRV-Tools-shared.so
         cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.BUNDLE }}/lib64/libFAudio.so.0
         cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.BUNDLE }}/lib64/libFNA3D.so.0
         cp FNA/lib/Theorafile/libtheorafile.so ${{ env.BUNDLE }}/lib64
