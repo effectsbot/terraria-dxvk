@@ -120,9 +120,9 @@ jobs:
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
 
-        p7zip -f x ./libsndio7.0_1.5.0-3_amd64.deb
+        7za -y x ./libsndio7.0_1.5.0-3_amd64.deb
         tar xf ./data.tar
-        p7zip -f x ./libsndio-dev_1.5.0-3_amd64.deb
+        7za -y x ./libsndio-dev_1.5.0-3_amd64.deb
         tar xf ./data.tar
 
         install -m 755 ./usr/lib/x86_64-linux-gnu/libsndio.so.7.0 /usr/lib64/libsndio.so.0
