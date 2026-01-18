@@ -25,7 +25,7 @@ jobs:
         dnf update -y
         dnf install -y dnf-plugins-core
         dnf config-manager --set-enabled powertools
-        dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+        dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
         rpm --import https://download.mono-project.com/repo/xamarin.gpg
         curl https://download.mono-project.com/repo/centos8-stable.repo | tee /etc/yum.repos.d/mono-centos8-stable.repo
         dnf update -y
