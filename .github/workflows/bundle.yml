@@ -34,7 +34,7 @@ jobs:
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
 
         dnf install -y \
-          gcc \
+          gcc-toolset-9 \
           git-core \
           make \
           cmake \
@@ -76,7 +76,7 @@ jobs:
           ninja-build \
           meson \
           glslang-devel \
-          gcc-c++ \
+          gcc-toolset-9-gcc-c++ \
           kernel-devel \
           patch \
           diffutils \
