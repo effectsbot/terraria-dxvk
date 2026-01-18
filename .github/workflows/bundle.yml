@@ -6,11 +6,11 @@ permissions:
 env:
   BUNDLE_VERSION: "0.3.0"
   MESON_VERSION: "0.58.2"
-  VULKAN_VERSION: "1.4.335.0"
+  VULKAN_VERSION: "vulkan-sdk-1.4.335.0"
   VKD3D_VERSION: "1.18"
-  SDL_VERSION: "3.4.0"
-  SDL2_COMPAT_VERSION: "2.32.62"
-  DXVK_VERSION: "2.5.3"
+  SDL_VERSION: "release-3.4.0"
+  SDL2_COMPAT_VERSION: "release-2.32.62"
+  DXVK_VERSION: "v2.5.3"
   FNA_VERSION: "26.01"
 jobs:
   build:
@@ -88,26 +88,57 @@ jobs:
       run: |
         echo "BUNDLE=$GITHUB_WORKSPACE/${{ env.NAME }}" >> $GITHUB_ENV
 
-        git clone https://github.com/mesonbuild/meson.git --depth 1 \
-          --branch ${{ env.MESON_VERSION }}
-        git clone https://github.com/KhronosGroup/Vulkan-Headers.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://github.com/KhronosGroup/SPIRV-Headers.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://github.com/KhronosGroup/Vulkan-Loader.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://github.com/KhronosGroup/SPIRV-Tools.git --depth 1 \
-          --branch vulkan-sdk-${{ env.VULKAN_VERSION }}
-        git clone https://gitlab.winehq.org/wine/vkd3d.git --depth 1 \
-          --branch vkd3d-${{ env.VKD3D_VERSION }}
-        git clone https://github.com/libsdl-org/SDL.git --depth 1 \
-          --branch release-${{ env.SDL_VERSION }}
-        git clone https://github.com/libsdl-org/sdl2-compat.git --depth 1 \
-          --branch release-${{ env.SDL2_COMPAT_VERSION }}
-        git clone https://github.com/doitsujin/dxvk.git --recursive --depth 1 \
-          --branch v${{ env.DXVK_VERSION }}
-        git clone https://github.com/FNA-XNA/FNA.git --recursive --depth 1 \
-          --branch ${{ env.FNA_VERSION }}
+        curl https://codeload.github.com/mesonbuild/meson/archive/refs/tags/${{ env.MESON_VERSION }}.tar.gz -O meson.tar.gz &
+        curl https://codeload.github.com/KhronosGroup/Vulkan-Headers/tar.gz/refs/tags/${{ env.VULKAN_VERSION }} -o Vulkan-Headers.tar.gz &
+        curl https://codeload.github.com/KhronosGroup/SPIRV-Headers/tar.gz/refs/tags/${{ env.VULKAN_VERSION }} -o SPIRV-Headers.tar.gz &
+        curl https://codeload.github.com/KhronosGroup/Vulkan-Loader/tar.gz/refs/tags/${{ env.VULKAN_VERSION }} -o Vulkan-Loader.tar.gz &
+        curl https://codeload.github.com/KhronosGroup/SPIRV-Tools/tar.gz/refs/tags/${{ env.VULKAN_VERSION }} -o SPIRV-Tools.tar.gz &
+        curl https://dl.winehq.org/vkd3d/source/vkd3d-${{ env.VKD3D_VERSION }}.tar.xz -o vkd3d.tar.xz &
+        curl https://codeload.github.com/libsdl-org/SDL/tar.gz/refs/tags/${{ env.SDL_VERSION }} -o SDL.tar.gz &
+        curl https://codeload.github.com/libsdl-org/sdl2-compat/tar.gz/refs/tags/${{ env.SDL2_COMPAT_VERSION }} -o sdl2-compat.tar.gz &
+        curl https://codeload.github.com/doitsujin/dxvk/tar.gz/refs/tags/${{ env.DXVK_VERSION }} -o dxvk.tar.gz &
+        curl https://codeload.github.com/FNA-XNA/FNA/tar.gz/refs/tags/${{ env.FNA_VERSION }} -o FNA.tar.gz &
+
+        curl https://codeload.github.com/KhronosGroup/Vulkan-Headers/tar.gz/46dc0f6e514f5730784bb2cac2a7c731636839e8 -o dxvk-Vulkan-Headers.tar.gz &
+        curl https://codeload.github.com/KhronosGroup/SPIRV-Headers/tar.gz/8b246ff75c6615ba4532fe4fde20f1be090c3764 -o dxvk-SPIRV-Headers.tar.gz &
+        curl https://codeload.github.com/misyltoad/mingw-directx-headers/tar.gz/9df86f2341616ef1888ae59919feaa6d4fad693d -o dxvk-mingw-directx-header.tar.gz &
+        curl https://codeload.github.com/doitsujin/libdisplay-info/tar.gz/275e6459c7ab1ddd4b125f28d0440716e4888078 -o dxvk-libdisplay-info.tar.gz &
+        curl https://codeload.github.com/FNA-XNA/FAudio/tar.gz/633bdb772a593104414b4b103ec752567d57c3c1 -o FNA-FAudio.tar.gz &
+        curl https://codeload.github.com/FNA-XNA/FNA3D/tar.gz/212c3e5ce2d988d907bf8b359f5e0dbdfcc77854 -o FNA-FNA3D.tar.gz &
+        curl https://codeload.github.com/flibitijibibo/SDL2-CS/tar.gz/1eb20e5c690aee9a5188ba9cf06207295c51d935 -o FNA-SDL2-CS.tar.gz &
+        curl https://codeload.github.com/flibitijibibo/SDL3-CS/tar.gz/83d63971db4e71a1f2d60e838c8ce768cb4e6a9c -o FNA-SDL3-CS.tar.gz &
+        curl https://codeload.github.com/FNA-XNA/Theorafile/tar.gz/9476f48b5b4ed619aa18c9bf13484be3efd172e9 -o FNA-Theorafile.tar.gz &
+        wait
+
+        for file in *.tar.gz; do tar -zxf "$file"; done &
+        for file in *.tar.xz; do tar -Jxf "$file"; done &
+        wait
+
+        mv meson-${{ env.MESON_VERSION }} meson &
+        mv Vulkan-Headers-${{ env.VULKAN_VERSION }} Vulkan-Headers &
+        mv SPIRV-Headers-${{ env.VULKAN_VERSION }} SPIRV-Headers &
+        mv Vulkan-Loader-${{ env.VULKAN_VERSION }} Vulkan-Loader &
+        mv SPIRV-Tools-${{ env.VULKAN_VERSION }} SPIRV-Tools &
+        mv vkd3d-${{ env.VKD3D_VERSION }} vkd3d &
+        mv SDL-${{ env.SDL_VERSION }} SDL &
+        mv sdl2-compat-${{ env.SDL2_COMPAT_VERSION }} sdl2-compat &
+        mv dxvk-${{ env.DXVK_VERSION }} dxvk &
+        mv FNA-${{ env.FNA_VERSION }} FNA &
+
+        mv dxvk-Vulkan-Headers-46dc0f6e514f5730784bb2cac2a7c731636839e8/* dxvk/include/vulkan &
+        mv dxvk-SPIRV-Headers-8b246ff75c6615ba4532fe4fde20f1be090c3764/* dxvk/include/spirv &
+        mv dxvk-mingw-directx-headers-9df86f2341616ef1888ae59919feaa6d4fad693d/* dxvk/include/native/directx &
+        mv dxvk-libdisplay-info-275e6459c7ab1ddd4b125f28d0440716e4888078/* dxvk/subprojects/libdisplay-info &
+        mv FNA-FAudio-633bdb772a593104414b4b103ec752567d57c3c1/* FNA/lib/FAudio &
+        mv FNA-FNA3D-212c3e5ce2d988d907bf8b359f5e0dbdfcc77854/* FNA/lib/FNA3D &
+        mv FNA-SDL2-CS-1eb20e5c690aee9a5188ba9cf06207295c51d935/* FNA/lib/SDL2-CS &
+        mv FNA-SDL3-CS-83d63971db4e71a1f2d60e838c8ce768cb4e6a9c/* FNA/lib/SDL3-CS &
+        mv FNA-Theorafile-9476f48b5b4ed619aa18c9bf13484be3efd172e9/* FNA/lib/Theorafile &
+        wait
+
+        rm *.tar.gz &
+        rm *.tar.xz &
+        wait
 
     - name: 'Apply patches'
       run: |
@@ -203,7 +234,6 @@ jobs:
     - name: 'Configure vkd3d'
       working-directory: vkd3d
       run: |
-        ./autogen.sh
         ./configure \
         --prefix=/usr \
         --disable-tests \
@@ -316,8 +346,8 @@ jobs:
       run: |
         mkdir -p ${{ env.BUNDLE }}/lib64
         cp FNA/bin/Release/* ${{ env.BUNDLE }}
-        cp /usr/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
-        cp /usr/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
+        cp /usr/local/lib/x86_64-linux-gnu/libdxvk_d3d11.so.0 ${{ env.BUNDLE }}/lib64/libdxvk_d3d11.so.0
+        cp /usr/local/lib/x86_64-linux-gnu/libdxvk_dxgi.so.0 ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
         cp /usr/lib/x86_64-linux-gnu/libSDL3.so.0 ${{ env.BUNDLE }}/lib64/libSDL3.so.0
         cp /usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0 ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
         cp /usr/lib/x86_64-linux-gnu/libvkd3d.so.1 ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
