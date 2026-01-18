@@ -116,8 +116,6 @@ jobs:
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
-      with:
-        create-symlink: true
 
     - name: 'Configure Vulkan-Headers'
       working-directory: Vulkan-Headers
