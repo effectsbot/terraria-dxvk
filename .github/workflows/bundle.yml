@@ -35,7 +35,7 @@ jobs:
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
-        echo "INCLUDE_DIRECTORIES=/usr/local/include:$INCLUDE_DIRECTORIES" >> $GITHUB_ENV
+        echo "INCLUDE_DIRS=/usr/local/include:$INCLUDE_DIRS" >> $GITHUB_ENV
 
         dnf ${{ env.DNF_OPTS }} install -y \
           gcc-toolset-10 \
@@ -194,7 +194,7 @@ jobs:
         -D CMAKE_INSTALL_PREFIX=/usr/local \
         -D CMAKE_INSTALL_SYSCONFDIR=/etc \
         -D CMAKE_SKIP_INSTALL_RPATH=ON \
-        -D SPIRV-Headers_SOURCE_DIR=/usr \
+        -D SPIRV-Headers_SOURCE_DIR=/usr/local \
         -D SPIRV_TOOLS_BUILD_STATIC=OFF \
         -D SPIRV_WERROR=OFF \
         -D SPIRV_SKIP_TESTS=ON \
