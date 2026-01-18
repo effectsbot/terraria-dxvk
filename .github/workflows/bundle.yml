@@ -15,7 +15,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: almalinux:8
+    container: almalinux:9
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -24,8 +24,7 @@ jobs:
       run: |
         dnf update -y
         dnf install -y gnupg2 ca-certificates dnf-plugins-core
-        dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
-        dnf install https://pkgs.sysadmins.ws/el8/base/x86_64/raven-release.el8.noarch.rpm -y
+        dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
         dnf config-manager --enable epel
         dnf config-manager --set-enabled powertools
         rpm --import "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
