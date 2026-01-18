@@ -35,7 +35,6 @@ jobs:
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
-        echo "INCLUDE_DIRS=/usr/local/include:$INCLUDE_DIRS" >> $GITHUB_ENV
 
         dnf ${{ env.DNF_OPTS }} install -y \
           gcc-toolset-10 \
@@ -88,8 +87,7 @@ jobs:
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm &
-        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm &
-        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/mingw-w64-tools-12.0.0-2.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
         wait
 
         dnf install -y ${{ env.DNF_OPTS }} \
@@ -98,8 +96,7 @@ jobs:
           ./libdecor-0.2.2-5.el8.x86_64.rpm \
           ./libdecor-devel-0.2.2-5.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
-          ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm \
-          ./mingw-w64-tools-12.0.0-2.el8.x86_64.rpm
+          ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
 
     - name: 'Fetch sources'
       run: |
