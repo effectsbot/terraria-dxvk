@@ -35,7 +35,7 @@ jobs:
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
-        echo "INCLUDE_DIRS=/usr/local/include:$INCLUDE_DIRS" >> $GITHUB_ENV
+        echo "INCLUDE_DIRECTORIES=/usr/local/include:$INCLUDE_DIRECTORIES" >> $GITHUB_ENV
 
         dnf ${{ env.DNF_OPTS }} install -y \
           gcc-toolset-10 \
