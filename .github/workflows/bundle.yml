@@ -5,7 +5,6 @@ permissions:
   pull-requests: read
 env:
   BUNDLE_VERSION: "0.3.0"
-  MESON_VERSION: "0.58.2"
   VULKAN_VERSION: "vulkan-sdk-1.4.335.0"
   VKD3D_VERSION: "vkd3d-1.18"
   SDL_VERSION: "release-3.4.0"
@@ -75,7 +74,7 @@ jobs:
           libtool \
           wine-devel \
           ninja-build \
-          python3-setuptools \
+          meson \
           gcc-c++ \
           kernel-devel \
           patch \
@@ -93,8 +92,6 @@ jobs:
       run: |
         echo "BUNDLE=$GITHUB_WORKSPACE/${{ env.NAME }}" >> $GITHUB_ENV
 
-        git clone https://github.com/mesonbuild/meson.git --depth 1 \
-          --branch ${{ env.MESON_VERSION }}
         git clone https://github.com/KhronosGroup/Vulkan-Headers.git --depth 1 \
           --branch ${{ env.VULKAN_VERSION }}
         git clone https://github.com/KhronosGroup/SPIRV-Headers.git --depth 1 \
@@ -122,14 +119,6 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2
       with:
         create-symlink: true
-
-    - name: 'Build meson'
-      working-directory: meson
-      run: python3 setup.py build
-
-    - name: 'Install meson'
-      working-directory: meson
-      run: python3 setup.py install --root="/" --optimize=1 --skip-build
 
     - name: 'Configure Vulkan-Headers'
       working-directory: Vulkan-Headers
