@@ -15,78 +15,74 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: almalinux:9
+    container: debian:12
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: 'Add external repositories'
+    # Sourced from mono-project.com/download/stable
+    - name: 'Add Mono repository'
       run: |
-        dnf update -y
-        dnf install -y gnupg2 ca-certificates dnf-plugins-core
-        dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
-        crb enable
-        update-crypto-policies --set DEFAULT:SHA1
-        rpm --import "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
-        curl https://download.mono-project.com/repo/centos8-stable.repo | tee /etc/yum.repos.d/mono-centos8-stable.repo
-        dnf update -y
+        apt update -y
+        apt install -y dirmngr ca-certificates gnupg
+        gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/debian stable-buster main" | tee /etc/apt/sources.list.d/mono-official-stable.list
+        apt update -y
 
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
-        dnf install -y \
-          gcc \
-          git-core \
+        apt install -y \
+          build-essential \
+          git \
           make \
+          pkg-config \
           cmake \
-          alsa-lib-devel \
-          fribidi-devel \
-          pulseaudio-libs-devel \
-          pipewire-devel \
-          libX11-devel \
-          libXext-devel \
-          libXrandr-devel \
-          libXcursor-devel \
-          libXfixes-devel \
-          libXi-devel \
-          libXScrnSaver-devel \
-          libXtst-devel \
-          dbus-devel \
-          ibus-devel \
-          systemd-devel \
-          mesa-libGL-devel \
-          libxkbcommon-devel \
-          mesa-libGLES-devel \
-          mesa-libEGL-devel \
-          vulkan-devel \
-          wayland-devel \
-          wayland-protocols-devel \
-          libdrm-devel \
-          mesa-libgbm-devel \
-          libusb1-devel \
-          libdecor-devel \
-          pipewire-jack-audio-connection-kit-devel \
-          libthai-devel \
-          liburing-devel \
+          ninja-build \
+          gnome-desktop-testing \
+          libasound2-dev \
+          libpulse-dev \
+          libaudio-dev \
+          libfribidi-dev \
+          libjack-dev \
+          libsndio-dev \
+          libx11-dev \
+          libxext-dev \
+          libxrandr-dev \
+          libxcursor-dev \
+          libxfixes-dev \
+          libxi-dev \
+          libxss-dev \
+          libxtst-dev \
+          libxkbcommon-dev \
+          libdrm-dev \
+          libgbm-dev \
+          libgl1-mesa-dev \
+          libgles2-mesa-dev \
+          libegl1-mesa-dev \
+          libdbus-1-dev \
+          libibus-1.0-dev \
+          libudev-dev \
+          libthai-dev \
+          libpipewire-0.3-dev \
+          libwayland-dev \
+          libdecor-0-dev \
+          liburing-dev \
+          mingw-w64 \
+          glslang-tools \
+          ninja-build \
+          python3-setuptools \
           mono-devel \
           autoconf \
           automake \
           bison \
           flex \
-          perl-JSON \
-          perl-open \
+          libjson-perl \
           libtool \
-          wine-devel \
-          mingw-w64-tools \
-          glslang-devel \
-          ninja-build \
-          python3-setuptools \
-          gcc-c++ \
-          kernel-devel \
-          patch \
-          diffutils \
+          wine64-tools \
           ccache
 
     - name: 'Fetch sources'
