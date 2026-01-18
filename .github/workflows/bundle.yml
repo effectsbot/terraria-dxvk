@@ -44,7 +44,6 @@ jobs:
           alsa-lib-devel \
           fribidi-devel \
           pulseaudio-libs-devel \
-          pipewire-devel \
           libX11-devel \
           libXext-devel \
           libXrandr-devel \
@@ -68,6 +67,7 @@ jobs:
           libusb1-devel \
           libthai-devel \
           liburing-devel \
+          libunwind-devel \
           mono-devel \
           autoconf \
           bison \
@@ -81,14 +81,19 @@ jobs:
           kernel-devel \
           patch \
           diffutils \
+          p7zip \
           ccache
 
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-13.1.1-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-devel-13.1.1-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-libs-1.0.9-1.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-devel-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm &
-        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
+        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm &
+        curl -O http://ftp.de.debian.org/debian/pool/main/s/sndio/libsndio7.0_1.5.0-3_amd64.deb &
+        curl -O http://ftp.de.debian.org/debian/pool/main/s/sndio/libsndio-dev_1.5.0-3_amd64.deb &
         wait
 
         dnf install -y ${{ env.DNF_OPTS }} \
@@ -96,8 +101,18 @@ jobs:
           ./glslang-devel-13.1.1-1.el8.x86_64.rpm \
           ./libdecor-0.2.2-5.el8.x86_64.rpm \
           ./libdecor-devel-0.2.2-5.el8.x86_64.rpm \
+          ./pipewire-libs-1.0.9-1.el8.x86_64.rpm \
+          ./pipewire-devel-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
+
+        p7zip x ./libsndio7.0_1.5.0-3_amd64.deb
+        tar xf ./data.tar
+        p7zip x ./libsndio-dev_1.5.0-3_amd64.deb
+        tar xf ./data.tar
+
+        install -m 755 ./usr/lib/x86_64-linux-gnu/libsndio.so /usr/lib64
+        install -m 644 ./usr/include/sndio.h /usr/include
 
     - name: 'Fetch sources'
       run: |
