@@ -71,7 +71,6 @@ jobs:
           libthai-devel \
           liburing-devel \
           mono-devel \
-          patch \
           autoconf \
           automake \
           bison \
@@ -83,6 +82,9 @@ jobs:
           glslang-devel \
           ninja-build \
           python3-setuptools \
+          gcc-c++ \
+          kernel-devel \
+          patch \
           ccache
 
     - name: 'Fetch sources'
