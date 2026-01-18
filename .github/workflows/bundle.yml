@@ -38,7 +38,6 @@ jobs:
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         dnf install -y \
-
           gcc \
           git-core \
           make
@@ -71,7 +70,6 @@ jobs:
           libdecor-devel \
           pipewire-jack-audio-connection-kit-devel \
           libthai-devel \
-
           mono-devel \
           autoconf \
           automake \
@@ -80,13 +78,10 @@ jobs:
           perl-JSON \
           libtool \
           wine-devel \
-
           mingw-w64-tools \
           glslang-devel \
           ninja-build \
-
           python3-setuptools \
-
           ccache
 
     - name: 'Fetch sources'
