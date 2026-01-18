@@ -1,4 +1,4 @@
-name: Build bundle
+name: Create bundle
 on: workflow_dispatch
 permissions:
   contents: write
@@ -33,8 +33,8 @@ jobs:
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
         echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
-        echo "CC='ccache gcc'" >> $GITHUB_ENV
-        echo "CCX='ccache g++'" >> $GITHUB_ENV
+        echo "CC=ccache gcc" >> $GITHUB_ENV
+        echo "CCX=ccache g++" >> $GITHUB_ENV
 
         apt install -y \
           build-essential \
@@ -302,7 +302,7 @@ jobs:
       working-directory: FNA
       run: msbuild /p:Configuration=Release /p:Platform=x64 FNA.sln
 
-    - name: 'Create bundle'
+    - name: 'Copy libraries to bundle'
       run: |
         mkdir -p ${{ env.BUNDLE }}/lib64
         cp FNA/bin/Release/* ${{ env.BUNDLE }}
