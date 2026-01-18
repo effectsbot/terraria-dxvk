@@ -71,7 +71,7 @@ jobs:
           liburing-dev \
           glslang-tools \
           meson \
-          msbuild \
+          mono-devel \
           autoconf \
           bison \
           flex \
