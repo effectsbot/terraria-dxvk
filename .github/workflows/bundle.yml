@@ -34,10 +34,10 @@ jobs:
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
-        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-12/root/usr/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-9/root/usr/bin:$PATH" >> $GITHUB_ENV
 
-        dnf --setopt=install_weak_deps=False install -y \
-          gcc-toolset-12 \
+        dnf ${{ env.DNF_OPTS }} install -y \
+          gcc-toolset-9 \
           git-core \
           cmake \
           alsa-lib-devel \
@@ -82,12 +82,21 @@ jobs:
           diffutils \
           ccache
 
-        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-15.3.0-1.el8.x86_64.rpm
-        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-devel-15.3.0-1.el8.x86_64.rpm
-        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm
-        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm
-        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm
-        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
+        curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-15.3.0-1.el8.x86_64.rpm & 
+        curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-devel-15.3.0-1.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm &
+        wait
+
+        dnf install -y ${{ env.DNF_OPTS }} \
+          ./glslang-15.3.0-1.el8.x86_64.rpm \
+          ./glslang-devel-15.3.0-1.el8.x86_64.rpm \
+          ./libdecor-0.2.2-5.el8.x86_64.rpm \
+          ./libdecor-devel-0.2.2-5.el8.x86_64.rpm \
+          ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
+          ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
 
     - name: 'Fetch sources'
       run: |
@@ -114,7 +123,8 @@ jobs:
 
     - name: 'Apply patches'
       run: |
-        patch -d FNA -sNp1 < src/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
+        patch -d FNA -sNp1 < patches/0001-Add-FNA.Settings.props.patch
+        patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
@@ -185,8 +195,9 @@ jobs:
         -D CMAKE_SKIP_INSTALL_RPATH=ON \
         -D SPIRV-Headers_SOURCE_DIR=/usr \
         -D SPIRV_TOOLS_BUILD_STATIC=OFF \
-        -D SPIRV_LIBRARIES= \
-        -D SPIRV_WERROR=OFF
+        -D SPIRV_WERROR=OFF \
+        -D SPIRV_SKIP_TESTS=ON \
+        -D SPIRV_SKIP_EXECUTABLES=ON
 
     - name: 'Build SPIRV-Tools'
       working-directory: SPIRV-Tools
