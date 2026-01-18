@@ -21,21 +21,23 @@ jobs:
 
     - name: 'Add external repositories'
       run: |
-        dnf update -y --setopt=install_weak_deps=False
-        dnf install -y --setopt=install_weak_deps=False dnf-plugins-core
+        echo "DNF_OPTS=--setopt=install_weak_deps=False" >> $GITHUB_ENV
+        
+        dnf update -y ${{ env.DNF_OPTS }}
+        dnf install -y ${{ env.DNF_OPTS }} dnf-plugins-core
         dnf config-manager --set-enabled powertools
-        dnf install --setopt=install_weak_deps=False -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+        dnf install ${{ env.DNF_OPTS }} -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
         rpm --import https://download.mono-project.com/repo/xamarin.gpg
         curl https://download.mono-project.com/repo/centos8-stable.repo | tee /etc/yum.repos.d/mono-centos8-stable.repo
-        dnf --setopt=install_weak_deps=False update -y
+        dnf ${{ env.DNF_OPTS }} update -y
 
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
-        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-12/root/usr/bin:$PATH" >> $GITHUB_ENV
 
         dnf --setopt=install_weak_deps=False install -y \
-          gcc-toolset-10 \
+          gcc-toolset-12 \
           git-core \
           cmake \
           alsa-lib-devel \
@@ -57,6 +59,7 @@ jobs:
           libxkbcommon-devel \
           mesa-libGLES-devel \
           mesa-libEGL-devel \
+          vulkan-devel \
           wayland-devel \
           wayland-protocols-devel \
           libdrm-devel \
@@ -79,12 +82,12 @@ jobs:
           diffutils \
           ccache
 
-        dnf install -y --setopt=install_weak_deps=False https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-15.3.0-1.el8.x86_64.rpm
-        dnf install -y --setopt=install_weak_deps=False https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-devel-15.3.0-1.el8.x86_64.rpm
-        dnf install -y --setopt=install_weak_deps=False https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm
-        dnf install -y --setopt=install_weak_deps=False https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm
-        dnf install -y --setopt=install_weak_deps=False https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm
-        dnf install -y --setopt=install_weak_deps=False https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-15.3.0-1.el8.x86_64.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-devel-15.3.0-1.el8.x86_64.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
 
     - name: 'Fetch sources'
       run: |
