@@ -23,6 +23,8 @@ jobs:
     - name: 'Add external repositories'
       run: |
         dnf update -y
+        dnf install dnf-plugins-core
+        update-crypto-policies --set DEFAULT:SHA1
         dnf config-manager --set-enabled powertools
         dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
         rpm --import https://download.mono-project.com/repo/xamarin.gpg
