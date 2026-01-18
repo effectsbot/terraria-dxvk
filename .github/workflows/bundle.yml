@@ -40,7 +40,7 @@ jobs:
         dnf install -y \
           gcc \
           git-core \
-          make
+          make \
           cmake \
           alsa-lib-devel \
           fribidi-devel \
