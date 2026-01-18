@@ -34,7 +34,8 @@ jobs:
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
-        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
+        echo "PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
 
         dnf ${{ env.DNF_OPTS }} install -y \
           gcc-toolset-10 \
