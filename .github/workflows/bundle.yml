@@ -88,6 +88,10 @@ jobs:
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-devel-13.1.1-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/fdk-aac-2.0.0-3.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/liblc3-1.0.4-2.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/libldac-2.0.2.3-8.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/lilv-0.24.6-2.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-libs-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-devel-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm &
@@ -101,6 +105,10 @@ jobs:
           ./glslang-devel-13.1.1-1.el8.x86_64.rpm \
           ./libdecor-0.2.2-5.el8.x86_64.rpm \
           ./libdecor-devel-0.2.2-5.el8.x86_64.rpm \
+          ./fdk-aac-2.0.0-3.el8.x86_64.rpm \
+          ./liblc3-1.0.4-2.el8.x86_64.rpm \
+          ./libldac-2.0.2.3-8.el8.x86_64.rpm \
+          ./lilv-0.24.6-2.el8.x86_64.rpm \
           ./pipewire-libs-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-devel-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
@@ -111,8 +119,8 @@ jobs:
         p7zip x ./libsndio-dev_1.5.0-3_amd64.deb
         tar xf ./data.tar
 
-        install -m 755 ./usr/lib/x86_64-linux-gnu/libsndio.so /usr/lib64
-        install -m 644 ./usr/include/sndio.h /usr/include
+        install -m 755 ./usr/lib/x86_64-linux-gnu/libsndio.so.7.0 /usr/lib64/libsndio.so.0
+        install -m 644 ./usr/include/sndio.h /usr/include/sndio.h
 
     - name: 'Fetch sources'
       run: |
