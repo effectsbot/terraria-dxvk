@@ -83,6 +83,7 @@ jobs:
           kernel-devel \
           patch \
           diffutils \
+          cpio \
           dpkg \
           ccache
 
