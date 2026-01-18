@@ -22,7 +22,7 @@ jobs:
     - name: 'Add external repositories'
       run: |
         echo "DNF_OPTS=--setopt=install_weak_deps=False" >> $GITHUB_ENV
-        
+
         dnf update -y ${{ env.DNF_OPTS }}
         dnf install -y ${{ env.DNF_OPTS }} dnf-plugins-core
         dnf config-manager --set-enabled powertools
@@ -34,10 +34,10 @@ jobs:
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
-        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-9/root/usr/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=/usr/lib/ccache:/usr/lib64/ccache:/opt/rh/gcc-toolset-15/root/usr/bin:$PATH" >> $GITHUB_ENV
 
         dnf ${{ env.DNF_OPTS }} install -y \
-          gcc-toolset-9 \
+          gcc-toolset-15 \
           git-core \
           cmake \
           alsa-lib-devel \
@@ -82,12 +82,13 @@ jobs:
           diffutils \
           ccache
 
-        curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-15.3.0-1.el8.x86_64.rpm & 
+        curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-15.3.0-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/glslang-devel-15.3.0-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-0.2.2-5.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/base/x86_64/libdecor-devel-0.2.2-5.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/mingw-w64-tools-12.0.0-2.el8.x86_64.rpm &
         wait
 
         dnf install -y ${{ env.DNF_OPTS }} \
@@ -96,7 +97,8 @@ jobs:
           ./libdecor-0.2.2-5.el8.x86_64.rpm \
           ./libdecor-devel-0.2.2-5.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
-          ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
+          ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm \
+          ./mingw-w64-tools-12.0.0-2.el8.x86_64.rpm
 
     - name: 'Fetch sources'
       run: |
@@ -122,9 +124,7 @@ jobs:
           --branch ${{ env.FNA_VERSION }}
 
     - name: 'Apply patches'
-      run: |
-        patch -d FNA -sNp1 < patches/0001-Add-FNA.Settings.props.patch
-        patch -d FNA -sNp1 < patches/0001-Switch-default-FNAPlatform-back-to-SDL2.patch
+      run: git -C FNA apply $GITHUB_WORKSPACE/patches/*.patch
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
@@ -310,10 +310,6 @@ jobs:
     - name: 'Build Theorafile'
       working-directory: FNA/lib/Theorafile
       run: make -j$(($(nproc) + 1))
-
-    - name: 'Configure FNA'
-      working-directory: FNA
-      run: cp $GITHUB_WORKSPACE/src/Terraria.Settings.props ./FNA.Settings.props
 
     - name: 'Build FNA'
       working-directory: FNA
