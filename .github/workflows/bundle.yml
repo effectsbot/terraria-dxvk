@@ -82,6 +82,7 @@ jobs:
           libjson-perl \
           libtool \
           wine64-tools \
+          curl \
           ccache
 
     - name: 'Fetch sources'
