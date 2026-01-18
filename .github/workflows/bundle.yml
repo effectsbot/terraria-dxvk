@@ -313,9 +313,9 @@ jobs:
         cat /usr/local/lib64/libdxvk_dxgi.so.0 > ${{ env.BUNDLE }}/lib64/libdxvk_dxgi.so.0
         cat /usr/lib64/libSDL3.so.0 > ${{ env.BUNDLE }}/lib64/libSDL3.so.0
         cat /usr/lib64/libSDL2-2.0.so.0 > ${{ env.BUNDLE }}/lib64/libSDL2-2.0.so.0
-        cat /usr/lib/libvkd3d.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
-        cat /usr/lib/libvkd3d-shader.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-shader.so.1
-        cat /usr/lib/libvkd3d-utils.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-utils.so.1
+        cat /usr/lib64/libvkd3d.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d.so.1
+        cat /usr/lib64/libvkd3d-shader.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-shader.so.1
+        cat /usr/lib64/libvkd3d-utils.so.1 > ${{ env.BUNDLE }}/lib64/libvkd3d-utils.so.1
         cat /usr/lib64/libSPIRV-Tools-shared.so > ${{ env.BUNDLE }}/lib64/libSPIRV-Tools-shared.so
         cat FNA/lib/FAudio/build/libFAudio.so.0 > ${{ env.BUNDLE }}/lib64/libFAudio.so.0
         cat FNA/lib/FNA3D/build/libFNA3D.so.0 > ${{ env.BUNDLE }}/lib64/libFNA3D.so.0
