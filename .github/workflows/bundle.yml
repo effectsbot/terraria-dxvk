@@ -26,10 +26,10 @@ jobs:
         dnf update -y ${{ env.DNF_OPTS }}
         dnf install -y ${{ env.DNF_OPTS }} dnf-plugins-core
         dnf config-manager --set-enabled powertools
-        dnf install ${{ env.DNF_OPTS }} -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
         rpm --import https://download.mono-project.com/repo/xamarin.gpg
         curl https://download.mono-project.com/repo/centos8-stable.repo | tee /etc/yum.repos.d/mono-centos8-stable.repo
-        dnf ${{ env.DNF_OPTS }} update -y
+        dnf update -y ${{ env.DNF_OPTS }}
 
     - name: 'Install build dependencies'
       run: |
@@ -37,7 +37,7 @@ jobs:
         echo "PATH=/usr/lib64/ccache:/opt/rh/gcc-toolset-10/root/usr/bin:$PATH" >> $GITHUB_ENV
         echo "PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
 
-        dnf ${{ env.DNF_OPTS }} install -y \
+        dnf install -y ${{ env.DNF_OPTS }} \
           gcc-toolset-10 \
           git-core \
           cmake \
