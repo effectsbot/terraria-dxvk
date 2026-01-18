@@ -76,6 +76,7 @@ jobs:
           bison \
           flex \
           perl-JSON \
+          perl-open \
           libtool \
           wine-devel \
           mingw-w64-tools \
