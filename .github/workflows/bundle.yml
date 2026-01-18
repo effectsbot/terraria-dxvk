@@ -92,6 +92,9 @@ jobs:
         curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/liblc3-1.0.4-2.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/libldac-2.0.2.3-8.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/lilv-0.24.6-2.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/serd-0.30.2-2.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/sord-0.16.4-3.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el8/multimedia/x86_64/sratom-0.6.4-2.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-libs-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-devel-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm &
@@ -109,6 +112,9 @@ jobs:
           ./liblc3-1.0.4-2.el8.x86_64.rpm \
           ./libldac-2.0.2.3-8.el8.x86_64.rpm \
           ./lilv-0.24.6-2.el8.x86_64.rpm \
+          ./serd-0.30.2-2.el8.x86_64.rpm \
+          ./sord-0.16.4-3.el8.x86_64.rpm \
+          ./sratom-0.6.4-2.el8.x86_64.rpm \
           ./pipewire-libs-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-devel-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
