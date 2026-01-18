@@ -93,7 +93,6 @@ jobs:
           wine-devel \
           ninja-build \
           meson \
-          ffmpeg-devel \
           kernel-devel \
           patch \
           diffutils \
