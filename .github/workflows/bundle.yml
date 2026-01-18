@@ -69,7 +69,9 @@ jobs:
           libdecor-devel \
           pipewire-jack-audio-connection-kit-devel \
           libthai-devel \
+          liburing-devel \
           mono-devel \
+          patch \
           autoconf \
           automake \
           bison \
