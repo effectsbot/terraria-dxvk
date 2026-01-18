@@ -69,10 +69,9 @@ jobs:
           libwayland-dev \
           libdecor-0-dev \
           liburing-dev \
-          mingw-w64-tools \
           glslang-tools \
           meson \
-          mono-devel \
+          msbuild \
           autoconf \
           bison \
           flex \
