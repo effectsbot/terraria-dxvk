@@ -32,7 +32,6 @@ jobs:
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
-        echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         apt install -y \
           build-essential \
@@ -111,6 +110,8 @@ jobs:
 
     - name: 'Configure ccache'
       uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        create-symlink: true
 
     - name: 'Configure Vulkan-Headers'
       working-directory: Vulkan-Headers
