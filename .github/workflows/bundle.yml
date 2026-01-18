@@ -33,6 +33,7 @@ jobs:
     - name: 'Install build dependencies'
       run: |
         echo "NAME=FNA-Terraria-${{ env.BUNDLE_VERSION }}" >> $GITHUB_ENV
+        echo "PATH=/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH" >> $GITHUB_ENV
 
         apt install -y \
           build-essential \
