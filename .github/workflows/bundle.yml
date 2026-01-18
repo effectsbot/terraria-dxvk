@@ -27,6 +27,7 @@ jobs:
         dnf install -y ${{ env.DNF_OPTS }} dnf-plugins-core
         dnf config-manager --set-enabled powertools
         dnf install -y ${{ env.DNF_OPTS }} https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+        dnf install -y ${{ env.DNF_OPTS }} https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-8.noarch.rpm
         rpm --import https://download.mono-project.com/repo/xamarin.gpg
         curl https://download.mono-project.com/repo/centos8-stable.repo | tee /etc/yum.repos.d/mono-centos8-stable.repo
         dnf update -y ${{ env.DNF_OPTS }}
@@ -78,6 +79,7 @@ jobs:
           wine-devel \
           ninja-build \
           meson \
+          ffmpeg-devel \
           kernel-devel \
           patch \
           diffutils \
@@ -99,6 +101,7 @@ jobs:
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-devel-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm &
         curl -O https://pkgs.sysadmins.ws/el8/extras/x86_64/pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm &
+        curl -O https://pkgs.sysadmins.ws/el9/base/x86_64/sndio-devel-1.9.0-2.x86_64.rpm &
         curl -O http://ftp.de.debian.org/debian/pool/main/s/sndio/libsndio7.0_1.5.0-3_amd64.deb &
         curl -O http://ftp.de.debian.org/debian/pool/main/s/sndio/libsndio-dev_1.5.0-3_amd64.deb &
         wait
@@ -120,9 +123,12 @@ jobs:
           ./pipewire-jack-audio-connection-kit-1.0.9-1.el8.x86_64.rpm \
           ./pipewire-jack-audio-connection-kit-devel-1.0.9-1.el8.x86_64.rpm
 
+        rpm2cpio ./sndio-devel-1.9.0-2.x86_64.rpm | cpio -id
+
         dpkg-deb -x ./libsndio7.0_1.5.0-3_amd64.deb .
         dpkg-deb -x ./libsndio-dev_1.5.0-3_amd64.deb .
 
+        install -m 644 ./usr/lib64/pkgconfig/sndio.pc /usr/lib64/pkgconfig/sndio.pc
         install -m 755 ./usr/lib/x86_64-linux-gnu/libsndio.so.7.0 /usr/lib64/libsndio.so.0
         install -m 644 ./usr/include/sndio.h /usr/include/sndio.h
 
